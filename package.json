@@ -1,0 +1,19 @@
+{
+  "name": "aichecareers",
+  "version": "1.0.0",
+  "description": "Discord Bot to send Internship and Job Postings to UCSB AIChE Discord",
+  "main": "bot",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vu-dylan/aichecareers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vu-dylan/aichecareers/issues"
+  },
+  "homepage": "https://github.com/vu-dylan/aichecareers#readme"
+}
