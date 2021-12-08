@@ -8,7 +8,8 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * Once a week, I look through MongoDB, format the listings, and send a message of the week's job opportunities to the channel
 
 ## Adding the Bot
-
+* Make sure you're an admin
+* Use this link: https://discord.com/api/oauth2/authorize?client_id=917917515542310942&permissions=3072&scope=bot
 ## Removing the Bot
 
 ## All Commands

@@ -21,8 +21,8 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
 
     GetAccessToken().then((accessToken: string) => {
         // Now that we have an access token, make call to the API to get the messages
-        GetEmails(accessToken).then((emailList: string[]) => {
-            emailList.forEach((emailId:string) => {
+        GetEmails(accessToken).then(async (emailList: string[]) => {
+            await emailList.forEach((emailId: string) => {
                 UploadEmail(accessToken, emailId, mongoclient);
             })
         });
@@ -128,6 +128,7 @@ export const GetAccessToken = async (): Promise<string> => {
 
 const GetEmails = async (access: string): Promise<string[]> => {
     // in the .env, have the email portion before the @
+    let emailIdlist: string[] = []
     let labelId: string = "Label_4791209953381529751";
     // let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL!}%40gmail.com/messages?labelIds=${labelId}&key=${process.env.GMAIL_API_KEY!}`, {
     //     headers: {
@@ -141,12 +142,17 @@ const GetEmails = async (access: string): Promise<string[]> => {
             Authorization: `Bearer ${access}`
         }
     });
-    return res.data.messages
+
+    await res.data.messages.forEach((emailObject: any) => {
+        emailIdlist.push(emailObject.id)
+    })
+
+    return emailIdlist
 }
 
 const UploadEmail = async (access: string, emailId: string, mongoclient: mongo.MongoClient) => {
     // Upload the jobs onto mongodb
-
+    
     // Get the specific email
     let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL}%40gmail.com/messages/${emailId}?key=${process.env.GMAIL_API_KEY!}`, {
         headers: {
@@ -155,7 +161,8 @@ const UploadEmail = async (access: string, emailId: string, mongoclient: mongo.M
     });
     // Read request and decode out of base64 to html
     // See: https://stackoverflow.com/questions/24811008/gmail-api-decoding-messages-in-javascript
-    let html = base64.decode(res.data.payload.parts[-1].body.data.replace(/-/g, '+').replace(/_/g, '/'));
+    // Check for length later
+    let html = base64.decode(res.data.payload.parts.at(-1).body.data.replace(/-/g, '+').replace(/_/g, '/'));
 
     const jobs: Job[] = GetJobArray(html);
 
@@ -192,7 +199,7 @@ export const GetJobArray = (html: string): Job[] => {
         jobList.push(new Job(ParseJobLink(jobs[i].attribs.href), jobTitle.data, companyName.data, isInternship(jobTitle.data)));
     }
 
-    console.log(jobList)
+    // console.log(jobList)
     
     return jobList;
 }

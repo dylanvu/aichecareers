@@ -1,5 +1,71 @@
 import * as mongo from 'mongodb';
+import * as Discord from 'discord.js'
 import {Job} from '../classes/job';
+
+export const AddChanneltoDatabase = async (mongoclient: mongo.MongoClient, channelid: string, guildid: string, msg: Discord.Message, collectionName: string) => {
+    let channelCollection = await mongoclient.db().collection(collectionName);
+
+    // Check if the channel exists in the database
+    let someCursor = await channelCollection.findOne(
+        {
+            channel_id : channelid,
+            guild_id : guildid,
+        }
+    )
+    if (!someCursor) {
+        console.log("Adding new channel with id: " + channelid);
+        if (collectionName == "ActiveChannels") {
+            msg.reply("You've subscribed to Chemical Engineering jobs! Jobs will be posted on Friday at 8:00 PM PST!");
+        } else {
+            console.log("No collection name of <" + collectionName + "> matched but new channel added");
+        }
+
+        channelCollection.insertOne({
+            channel_id : channelid,
+            guild_id : guildid,
+        })
+    } else {
+        console.log(channelid + " already exists in database");
+        if (collectionName == "ActiveChannels") {
+            msg.reply("Chemical Engineering jobs has already been added. Please wait until Friday at 8:00 PM PST.");
+        } else {
+            console.log("No collection name of <" + collectionName + "> matches and current channel is already added");
+        }
+    }
+}
+
+export const RemoveChannelFromDatabase = async (mongoclient: mongo.MongoClient, channelid: string, guildid: string, msg: Discord.Message, collectionName: string) => {
+    let channelCollection = await mongoclient.db().collection(collectionName);
+
+    // Check if the channel exists in the database
+    let someCursor = await channelCollection.findOne(
+        {
+            channel_id : channelid,
+            guild_id : guildid
+        }
+    )
+    if (someCursor) {
+        console.log("Deleting channel " + channelid);
+        if (collectionName == "ActiveChannels") {
+            msg.reply("Chemical Engineering jobs has been removed. Good luck in your job searches!");
+        } else {
+            console.log("Attempting to delete channel from <" + collectionName + "> but cannot find match to collection")
+        }
+        
+        channelCollection.deleteOne({
+            channel_id : channelid,
+            guild_id : guildid
+        })
+    } else {
+        console.log("Cannot delete channel that doesn't exist");
+        if (collectionName == "ActiveChannels") {
+            msg.reply("It appears you haven't added Chemical Engineering jobs to this channel yet. Give your career a shot before you remove me!");
+        } else {
+            console.log("Attempting to delete channel from <" + collectionName + "> when it doesn't exist in database, but cannot find match to collection")
+        }
+        
+    }
+}
 
 export const UploadJob = async (mongoclient: mongo.MongoClient, job: Job) => {
     try {
@@ -73,13 +139,14 @@ export const WipeCollection = async (mongoclient: mongo.MongoClient, isInternshi
 
 const CheckUnique = async (collection: any, job: Job): Promise<boolean> => {
     // used any type cuz I'm too lazy to figure out what exactly the type of this mongodb collection object is
-    let duplicates = await collection.find({
+    let duplicate = await collection.findOne({
         title: job.title,
         link: job.link,
         company: job.company
     });
 
-    if (duplicates) {
+    if (duplicate) {
+        console.log("Duplicate")
         return false;
     } else {
         return true;
