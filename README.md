@@ -14,8 +14,14 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 ## All Commands
 
 ## Technologies Used
-* Typescript - I wanted to learn some basic Typescript
-* MongoDB - my databse of choice
-* Discord.js - Discord bot
-* cron - regularly scheduling tasks (talking to GMail, sending weekly messages)
-* Google API (GMail) - to get the postings sent by LinkedIn to the GMail
+* [Typescript](https://www.typescriptlang.org/) - I wanted to learn some basic Typescript
+* [MongoDB + NodeJS Driver](https://docs.mongodb.com/drivers/node/current/) - my nosql databse of choice
+* [Discord.js](https://discord.js.org/#/) - Discord bot
+* [cron](https://www.npmjs.com/package/cron) - regularly scheduling tasks (talking to GMail, sending weekly messages)
+* [Google API (GMail)](https://developers.google.com/gmail/api) - to get the postings sent by LinkedIn to the GMail
+* [JSSoup](https://www.npmjs.com/package/jssoup) - Parse Job Alert (in HTML) 
+* [Axios](https://www.npmjs.com/package/axios) - Make requests to Google API
+
+## Resources Used
+* ibm.com/docs/en/app-connect/cloud?topic=gmail-connecting-google-application-by-providing-credentials-app-connect-use-basic-oauth
+* https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
