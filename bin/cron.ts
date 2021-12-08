@@ -45,7 +45,7 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
     // Parse MongoDB collections, create the giant posting message, and send
     // 2000 character message limit!
     // Send job postings every Saturday at 10 AM PST
-    let weeklyJob = new cron.CronJob('0 0 10 * * 7', () => {
+    let weeklyJob = new cron.CronJob('0 0 10 * * 6', () => {
         // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
         GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
             // Find all the internship jobs first
