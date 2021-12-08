@@ -1,4 +1,4 @@
-//https://code.visualstudio.com/docs/typescript/typescript-compiling TS Compiling
+// https://code.visualstudio.com/docs/typescript/typescript-compiling TS Compiling
 
 import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
@@ -45,12 +45,6 @@ const MongoConnect = async () => {
 
 MongoConnect();
 
-// DailyEmails(client);
-
-// GetJobArray(exampleJob)
-
-// console.log(base64.decode(exampleEmail.replace(/-/g, '+').replace(/_/g, '/')))
-
 const GetMessageIDs = (msg: Discord.Message) => {
     let textChannel = msg.channel as Discord.TextChannel
     let channelid = textChannel.id;
@@ -74,14 +68,26 @@ client.on("message", (msg: Discord.Message) => {
         RemoveChannelFromDatabase(mongoclient, channelid, guildid, msg, "ActiveChannels");
     }
 
-    if (msg.content === "!debug") {
-        DailyEmails(client, mongoclient);
+    if (msg.content === "!help") {
+        msg.reply("To add the Chemical Engineering Jobs bot to the channel, type in `!subscribe` \n \n To remove the bot, type in `!unsubscribe`");
     }
 
-    if (msg.content === "!purge") {
-        WipeCollection(mongoclient, true);
-        WipeCollection(mongoclient, false);
+    if (msg.content === "!github") {
+        msg.reply("https://github.com/vu-dylan/aichecareers");
     }
+
+    // if (msg.content === "!debug") {
+    //     DailyEmails(client, mongoclient);
+    // }
+
+    // if (msg.content === "!money") {
+    //     WeeklyPostings(client, mongoclient);
+    // }
+
+    // if (msg.content === "!purge") {
+    //     WipeCollection(mongoclient, true);
+    //     WipeCollection(mongoclient, false);
+    // }
 })
 
 client.login(process.env.DISCORD_BOT_TOKEN);

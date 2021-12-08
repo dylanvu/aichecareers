@@ -1,5 +1,6 @@
 import * as mongo from 'mongodb';
 import * as Discord from 'discord.js'
+import * as moment from 'moment';
 import {Job} from '../classes/job';
 
 export const AddChanneltoDatabase = async (mongoclient: mongo.MongoClient, channelid: string, guildid: string, msg: Discord.Message, collectionName: string) => {
@@ -104,9 +105,9 @@ export const GetAllJobs = async (mongoclient: mongo.MongoClient, isInternship: b
     let messageList: string[] = []
     let message: string;
     if (isInternship) {
-        message = ":rotating_light: :rotating_light:     **Internship/Co-Op Postings for the week:**     :rotating_light: :rotating_light:\n\n";
+        message = `:rotating_light: :rotating_light:     **Internship/Co-Op Postings for the Week: ${moment().format("MMM Do YY")}**     :rotating_light: :rotating_light:\n\n`;
     } else {
-        message = ":exclamation: :exclamation:     **Entry Level Job Postings for the week:**     :exclamation: :exclamation:\n\n";
+        message = `:exclamation: :exclamation:     **Entry Level Job Postings for the Week: ${moment().format("MMM Do YY")}**     :exclamation: :exclamation:\n\n`;
     }
     let allJobs = await collection.find({});
     await allJobs.forEach((job: any) => {
@@ -123,6 +124,20 @@ export const GetAllJobs = async (mongoclient: mongo.MongoClient, isInternship: b
     })
     // Push remaining message to array
     messageList.push(message);
+    // Make divider between posting blocks
+    let divider: string = "";
+    let hyphens: number = 5;
+    let breaks: number = 10;
+    for (let i: number = 0; i < hyphens; i++) {
+        divider = divider + "-";
+    }
+    for (let i: number = 0; i < breaks; i++) {
+        divider = divider + "\n";
+    }
+    for (let i: number = 0; i < hyphens; i++) {
+        divider = divider + "-";
+    }
+    messageList.push(divider);
 
     return messageList;
 } 

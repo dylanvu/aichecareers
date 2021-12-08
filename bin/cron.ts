@@ -19,61 +19,53 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
 
     // Define the daily email getting job at 11:59 PM
 
-    GetAccessToken().then((accessToken: string) => {
-        // Now that we have an access token, make call to the API to get the messages
-        GetEmails(accessToken).then(async (emailList: string[]) => {
-            await emailList.forEach((emailId: string) => {
-                UploadEmail(accessToken, emailId, mongoclient);
-            })
-        });
-    });
+    let dailyJob = new cron.CronJob('0 59 23 * * *', () => {
+        console.log("Getting today's postings");
+        try {
+            // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
+            GetAccessToken().then((accessToken: string) => {
+                // Now that we have an access token, make call to the API to get the messages
+                GetEmails(accessToken).then(async (emailList: string[]) => {
+                    await emailList.forEach((emailId: string) => {
+                        UploadEmail(accessToken, emailId, mongoclient);
+                    })
+                });
+            });
+        } catch (error) {
+            console.error(error);
+            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
+            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
+        }
+    }, null, true, 'America/Los_Angeles');
 
-    // let dailyJob = new cron.CronJob('0 59 23 * * *', () => {
-    //     console.log("Getting today's postings");
-    //     try {
-    //         // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
-    //         GetAccessToken().then((accessToken: string) => {
-    //             // Now that we have an access token, make call to the API to get the messages
-    //             GetEmails(accessToken).then((emailList: string[]) => {
-    //                 emailList.forEach((emailId:string) => {
-    //                     UploadEmail(accessToken, emailId, mongoclient);
-    //                 })
-    //             });
-    //         });
-    //     } catch (error) {
-    //         console.error(error);
-    //         // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
-    //         // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
-    //     }
-    // }, null, true, 'America/Los_Angeles');
-
-    // dailyJob.start();
+    dailyJob.start();
 }
 
 export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
     // Parse MongoDB collections, create the giant posting message, and send
     // 2000 character message limit!
-    // Send job postings every Friday at 8 PM
-    let weeklyJob = new cron.CronJob('0 0 20 * * 6', () => {
+    // Send job postings every Saturday at 10 AM PST
+    let weeklyJob = new cron.CronJob('0 0 10 * * 7', () => {
         // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
-        GetAllJobs(mongoclient, true).then((messages: string[]) => {
+        GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
             // Find all the internship jobs first
             for (const message of messages) {
-                SendtoAll(client, mongoclient, message);
+                await SendtoAll(client, mongoclient, message);
             }
             return
         }).then(() => {
             // Then find all the entry level jobs
-            WipeCollection(mongoclient, true);
-            GetAllJobs(mongoclient, false).then((messagesEntry: string[]) => {
+            GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
                 for (const messageEntry of messagesEntry) {
-                    SendtoAll(client, mongoclient, messageEntry);
+                    await SendtoAll(client, mongoclient, messageEntry);
                 }
                 return
             }).then(() => {
+                // Clear database for new jobs
+                WipeCollection(mongoclient, true);
                 WipeCollection(mongoclient, false);
             });
-        })
+        });
     });
 
     weeklyJob.start();
@@ -130,18 +122,18 @@ const GetEmails = async (access: string): Promise<string[]> => {
     // in the .env, have the email portion before the @
     let emailIdlist: string[] = []
     let labelId: string = "Label_4791209953381529751";
-    // let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL!}%40gmail.com/messages?labelIds=${labelId}&key=${process.env.GMAIL_API_KEY!}`, {
-    //     headers: {
-    //         Authorization: `Bearer ${access}`
-    //     }
-    // });
-
-    // Version without label ID
-    let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL!}%40gmail.com/messages?key=${process.env.GMAIL_API_KEY!}`, {
+    let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL!}%40gmail.com/messages?labelIds=${labelId}&key=${process.env.GMAIL_API_KEY!}`, {
         headers: {
             Authorization: `Bearer ${access}`
         }
     });
+
+    // Version without label ID
+    // let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL!}%40gmail.com/messages?key=${process.env.GMAIL_API_KEY!}`, {
+    //     headers: {
+    //         Authorization: `Bearer ${access}`
+    //     }
+    // });
 
     await res.data.messages.forEach((emailObject: any) => {
         emailIdlist.push(emailObject.id)
@@ -172,7 +164,8 @@ const UploadEmail = async (access: string, emailId: string, mongoclient: mongo.M
     })
 
     // Now delete the email
-    await axios.post(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL}%40gmail.com/messages/${emailId}/trash?key=${process.env.GMAIL_API_KEY!}`, {
+    // Axios has headers as the third argument: https://stackoverflow.com/questions/44617825/passing-headers-with-axios-post-request
+    await axios.post(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL}%40gmail.com/messages/${emailId}/trash?key=${process.env.GMAIL_API_KEY!}`, {}, {
         headers: {
             Authorization: `Bearer ${access}`
         }
@@ -195,14 +188,13 @@ export const GetJobArray = (html: string): Job[] => {
         let jobTitle: any = jobs[i].children[0] as any;
         let companyName: any = companies[i].children[0] as any;
         // jobList.push(new Job(ParseJobLink(jobs[i].attribs.href), jobTitle.data, ParseCompanyName(companyName.data))); // Create Job object with company name wihout location
-        jobList.push(new Job(ParseJobLink(jobs[i].attribs.href), jobTitle.data, companyName.data, isInternship(jobTitle.data)));
+        jobList.push(new Job(jobTitle.data, ParseJobLink(jobs[i].attribs.href), companyName.data, isInternship(jobTitle.data)));
     }
 
     // console.log(jobList)
     
     return jobList;
 }
-
 
 // <---------------- Utility Functions -------------->
 
