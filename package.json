@@ -4,7 +4,8 @@
   "description": "Discord Bot to send Internship and Job Postings to UCSB AIChE Discord",
   "main": "bot",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./dist/bot.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/vu-dylan/aichecareers/issues"
   },
-  "homepage": "https://github.com/vu-dylan/aichecareers#readme"
+  "homepage": "https://github.com/vu-dylan/aichecareers#readme",
+  "dependencies": {
+    "cron": "^1.8.2",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^4.2.1"
+  }
 }
