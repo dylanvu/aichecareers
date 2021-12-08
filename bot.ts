@@ -4,7 +4,11 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-// import {GetAccessToken} from './bin/jobs';
+import {DailyEmails, GetJobArray} from './bin/jobs';
+
+import * as fs from 'fs';
+
+const exampleJob = fs.readFileSync('./examplejob.txt', 'utf8')
 
 dotenv.config();
 
@@ -35,7 +39,9 @@ const MongoConnect = async () => {
 
 MongoConnect();
 
-// GetAccessToken();
+// DailyEmails(client);
+
+GetJobArray(exampleJob)
 
 
 client.on("ready", () => {
