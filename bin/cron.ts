@@ -3,9 +3,10 @@ import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
+import * as base64 from 'js-base64';
 
 import {Job} from '../classes/job';
-import { title } from 'process';
+import {UploadJob, GetAllJobs, WipeCollection} from './mongo';
 
 dotenv.config();
 
@@ -21,37 +22,97 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
     GetAccessToken().then((accessToken: string) => {
         // Now that we have an access token, make call to the API to get the messages
         GetEmails(accessToken).then((emailList: string[]) => {
-            console.log("Success", emailList)
+            emailList.forEach((emailId:string) => {
+                UploadEmail(accessToken, emailId, mongoclient);
+            })
         });
     });
 
-    let dailyJob = new cron.CronJob('0 59 23 * * *', () => {
-        console.log("Getting today's postings");
-        try {
-            // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
-            GetAccessToken().then((accessToken: string) => {
-                // Now that we have an access token, make call to the API to get the messages
-                GetEmails(accessToken).then((emailList: string[]) => {
-                    emailList.forEach((emailId:string) => {
-                        UploadEmail(accessToken, emailId, mongoclient);
-                    })
-                });
-            });
-        } catch (error) {
-            console.error(error);
-            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
-            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
-        }
-    }, null, true, 'America/Los_Angeles');
+    // let dailyJob = new cron.CronJob('0 59 23 * * *', () => {
+    //     console.log("Getting today's postings");
+    //     try {
+    //         // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
+    //         GetAccessToken().then((accessToken: string) => {
+    //             // Now that we have an access token, make call to the API to get the messages
+    //             GetEmails(accessToken).then((emailList: string[]) => {
+    //                 emailList.forEach((emailId:string) => {
+    //                     UploadEmail(accessToken, emailId, mongoclient);
+    //                 })
+    //             });
+    //         });
+    //     } catch (error) {
+    //         console.error(error);
+    //         // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
+    //         // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
+    //     }
+    // }, null, true, 'America/Los_Angeles');
 
-    dailyJob.start();
+    // dailyJob.start();
 }
 
-export const WeeklyPostings = async (client: Discord.Client) => {
+export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
     // Parse MongoDB collections, create the giant posting message, and send
     // 2000 character message limit!
+    // Send job postings every Friday at 8 PM
+    let weeklyJob = new cron.CronJob('0 0 20 * * 6', () => {
+        // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
+        GetAllJobs(mongoclient, true).then((messages: string[]) => {
+            // Find all the internship jobs first
+            for (const message of messages) {
+                SendtoAll(client, mongoclient, message);
+            }
+            return
+        }).then(() => {
+            // Then find all the entry level jobs
+            WipeCollection(mongoclient, true);
+            GetAllJobs(mongoclient, false).then((messagesEntry: string[]) => {
+                for (const messageEntry of messagesEntry) {
+                    SendtoAll(client, mongoclient, messageEntry);
+                }
+                return
+            }).then(() => {
+                WipeCollection(mongoclient, false);
+            });
+        })
+    });
+
+    weeklyJob.start();
 }
 
+
+// <------------------------- DiscordJS support function or something ------------------>
+
+const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, message: string) => {
+
+    let channelCollection = await mongoclient.db().collection('ActiveChannels')
+    let allCursor = channelCollection.find();
+
+    let channelDeletion: string[] = []
+
+    await allCursor.forEach((thisChannel: any) => {
+        // There was a bug where a channel did not exist for some reason except it was in the database, and I couldn't find it at all
+        // If DiscordJS can find the channel, send the question. Else, DiscordJS can't find a channel and delete it from the database
+        if (client.channels.cache.get(thisChannel.channel_id)) {
+            let channel = client.channels.cache.get(thisChannel.channel_id) as Discord.TextChannel; // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
+            channel.send(message);
+        } else {
+            console.log(thisChannel.channel_id + " does not exist. Deleting from database.")
+            channelDeletion.push(thisChannel.channel_id);
+        }
+    })
+
+    // Delete all undefined channels
+    if (channelDeletion.length != 0) {
+        channelDeletion.forEach((channelid) => {
+            channelCollection.deleteOne({
+                channel_id : channelid
+            })
+        })
+    }
+}
+
+
+// <----------------- Gmail API and related -------------------->
 
 
 export const GetAccessToken = async (): Promise<string> => {
@@ -73,6 +134,8 @@ const GetEmails = async (access: string): Promise<string[]> => {
     //         Authorization: `Bearer ${access}`
     //     }
     // });
+
+    // Version without label ID
     let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL!}%40gmail.com/messages?key=${process.env.GMAIL_API_KEY!}`, {
         headers: {
             Authorization: `Bearer ${access}`
@@ -82,6 +145,7 @@ const GetEmails = async (access: string): Promise<string[]> => {
 }
 
 const UploadEmail = async (access: string, emailId: string, mongoclient: mongo.MongoClient) => {
+    // Upload the jobs onto mongodb
 
     // Get the specific email
     let res = await axios.get(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL}%40gmail.com/messages/${emailId}?key=${process.env.GMAIL_API_KEY!}`, {
@@ -90,14 +154,22 @@ const UploadEmail = async (access: string, emailId: string, mongoclient: mongo.M
         }
     });
     // Read request and decode out of base64 to html
-    let html = atob(res.data.payload.parts[-1].body.data);
+    // See: https://stackoverflow.com/questions/24811008/gmail-api-decoding-messages-in-javascript
+    let html = base64.decode(res.data.payload.parts[-1].body.data.replace(/-/g, '+').replace(/_/g, '/'));
 
     const jobs: Job[] = GetJobArray(html);
 
     // Iterate through each job and add it to the correct mongodb collection
-    jobs.forEach((job: Job) => {
-        
+    await jobs.forEach(async (job: Job) => {
+        await UploadJob(mongoclient, job);
     })
+
+    // Now delete the email
+    await axios.post(`https://gmail.googleapis.com/gmail/v1/users/${process.env.EMAIL}%40gmail.com/messages/${emailId}/trash?key=${process.env.GMAIL_API_KEY!}`, {
+        headers: {
+            Authorization: `Bearer ${access}`
+        }
+    });
 
 }
 
@@ -124,6 +196,9 @@ export const GetJobArray = (html: string): Job[] => {
     
     return jobList;
 }
+
+
+// <---------------- Utility Functions -------------->
 
 const ParseJobLink = (url: string): string => {
     // Example split job link: https://www.linkedin.com/comm/jobs/view/2829788548'

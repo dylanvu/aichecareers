@@ -23,5 +23,6 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * [Axios](https://www.npmjs.com/package/axios) - Make requests to Google API
 
 ## Resources Used
-* ibm.com/docs/en/app-connect/cloud?topic=gmail-connecting-google-application-by-providing-credentials-app-connect-use-basic-oauth
+* https://ibm.com/docs/en/app-connect/cloud?topic=gmail-connecting-google-application-by-providing-credentials-app-connect-use-basic-oauth
 * https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
+* https://stackoverflow.com/questions/24811008/gmail-api-decoding-messages-in-javascript

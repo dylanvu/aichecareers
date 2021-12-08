@@ -4,11 +4,14 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-import {DailyEmails, GetJobArray} from './bin/jobs';
+import {DailyEmails, GetJobArray} from './bin/cron';
+
+import * as base64 from 'js-base64';
 
 import * as fs from 'fs';
 
 const exampleJob = fs.readFileSync('./examplejob.txt', 'utf8')
+let exampleEmail = fs.readFileSync('./sampleEmail.txt', 'utf8')
 
 dotenv.config();
 
@@ -41,11 +44,26 @@ MongoConnect();
 
 // DailyEmails(client);
 
-GetJobArray(exampleJob)
+// GetJobArray(exampleJob)
 
+// console.log(base64.decode(exampleEmail.replace(/-/g, '+').replace(/_/g, '/')))
+
+const GetMessageIDs = (msg: Discord.Message) => {
+    let textChannel = msg.channel as Discord.TextChannel
+    let channelid = textChannel.id;
+    let guildid = textChannel.guild.id;
+    return [channelid, guildid]
+}
 
 client.on("ready", () => {
     console.log(`Logged in as ${client.user?.tag}!`); // Use ? to enable this to be undefined: https://stackoverflow.com/questions/37632760/what-is-the-question-mark-for-in-a-typescript-parameter-name
 });
+
+client.on("message", msg => {
+    // Start the bot
+    if (msg.content == "!subscribe") {
+
+    }
+})
 
 client.login(process.env.DISCORD_BOT_TOKEN);
