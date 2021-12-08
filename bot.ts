@@ -45,6 +45,10 @@ const MongoConnect = async () => {
 
 MongoConnect();
 
+// Start cron jobs
+DailyEmails(client, mongoclient);
+WeeklyPostings(client, mongoclient);
+
 const GetMessageIDs = (msg: Discord.Message) => {
     let textChannel = msg.channel as Discord.TextChannel
     let channelid = textChannel.id;

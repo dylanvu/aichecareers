@@ -39,6 +39,7 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * https://code.visualstudio.com/docs/typescript/typescript-compiling
 * https://stackoverflow.com/questions/54496398/typescript-type-string-undefined-is-not-assignable-to-type-string
 * https://stackoverflow.com/questions/37632760/what-is-the-question-mark-for-in-a-typescript-parameter-name
+* https://stackoverflow.com/questions/34565872/how-to-delete-compiled-js-files-from-previous-typescript-ts-files
 
 ### Discord.js + Typescript
 * https://github.com/oceanroleplay/discord.ts-example/blob/main/src/client.ts
