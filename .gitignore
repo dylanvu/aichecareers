@@ -42,7 +42,8 @@ node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
-typings/
+# typings/
+# Dylan here. I'm keeping typings since it's necessary to run this later on
 
 # TypeScript cache
 *.tsbuildinfo
