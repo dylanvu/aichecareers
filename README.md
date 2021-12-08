@@ -20,7 +20,7 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * [Discord.js](https://discord.js.org/#/) - Discord bot
 * [cron](https://www.npmjs.com/package/cron) - regularly scheduling tasks (talking to GMail, sending weekly messages)
 * [Google API (GMail)](https://developers.google.com/gmail/api) - to get the postings sent by LinkedIn to the GMail
-* [JSSoup](https://www.npmjs.com/package/jssoup) - Parse Job Alert (in HTML) 
+* [Cheerio.js](https://cheerio.js.org/) - Parse Job Alert (in HTML) 
 * [Axios](https://www.npmjs.com/package/axios) - Make requests to Google API
 
 ## Resources Used

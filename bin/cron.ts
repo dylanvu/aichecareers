@@ -177,7 +177,6 @@ const UploadEmail = async (access: string, emailId: string, mongoclient: mongo.M
             Authorization: `Bearer ${access}`
         }
     });
-
 }
 
 export const GetJobArray = (html: string): Job[] => {
