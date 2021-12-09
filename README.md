@@ -40,6 +40,8 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * https://stackoverflow.com/questions/54496398/typescript-type-string-undefined-is-not-assignable-to-type-string
 * https://stackoverflow.com/questions/37632760/what-is-the-question-mark-for-in-a-typescript-parameter-name
 * https://stackoverflow.com/questions/34565872/how-to-delete-compiled-js-files-from-previous-typescript-ts-files
+* https://stackoverflow.com/questions/41292559/could-not-find-a-declaration-file-for-module-module-name-path-to-module-nam/42505940#42505940
+* https://dev.to/arnavkr/updating-node-js-to-16-in-replit-1ep0 Update Replit NodeJS version
 
 ### Discord.js + Typescript
 * https://github.com/oceanroleplay/discord.ts-example/blob/main/src/client.ts
