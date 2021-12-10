@@ -37,7 +37,7 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
             // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
         }
     }, null, true, 'America/Los_Angeles');
-
+    console.log("Daily Email Job")
     dailyJob.start();
 }
 
@@ -67,7 +67,7 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
             });
         });
     });
-
+    console.log("Weekly posting started")
     weeklyJob.start();
 }
 
