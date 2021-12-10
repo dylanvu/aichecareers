@@ -38,15 +38,16 @@ const mongoclient = new mongo.MongoClient(process.env.MONGO_DB_CONNECTION!); // 
 const MongoConnect = async () => {
     try {
         await mongoclient.connect()
-        // Start cron jobs after connecting to database
-        DailyEmails(client, mongoclient);
-        WeeklyPostings(client, mongoclient);
     } catch (e) {
         console.error(e);
     }
 }
 
 MongoConnect();
+
+// Start cron jobs, we should really do this after connecting to the database
+DailyEmails(client, mongoclient);
+WeeklyPostings(client, mongoclient);
 
 const GetMessageIDs = (msg: Discord.Message) => {
     let textChannel = msg.channel as Discord.TextChannel
