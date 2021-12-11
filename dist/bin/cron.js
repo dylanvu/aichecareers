@@ -83,7 +83,7 @@ exports.DailyEmails = DailyEmails;
 var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
     var weeklyJob;
     return __generator(this, function (_a) {
-        weeklyJob = new cron.CronJob('0 0 10 * * 6', function () {
+        weeklyJob = new cron.CronJob('0 0 9 * * 6', function () {
             // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
             (0, mongo_1.GetAllJobs)(mongoclient, true).then(function (messages) { return __awaiter(void 0, void 0, void 0, function () {
                 var _i, messages_1, message;
