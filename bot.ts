@@ -76,7 +76,7 @@ client.on("message", (msg: Discord.Message) => {
     }
 
     if (msg.content === "!github") {
-        msg.reply("https://github.com/vu-dylan/aichecareers");
+        msg.reply("<https://github.com/vu-dylan/aichecareers>");
     }
 
     // if (msg.content === "!debug") {

@@ -110,7 +110,7 @@ client.on("message", function (msg) {
         msg.reply("To add the Chemical Engineering Jobs bot to the channel, type in `!subscribe` \n \n To remove the bot, type in `!unsubscribe`");
     }
     if (msg.content === "!github") {
-        msg.reply("https://github.com/vu-dylan/aichecareers");
+        msg.reply("<https://github.com/vu-dylan/aichecareers>");
     }
     // if (msg.content === "!debug") {
     //     console.log("Debug");
