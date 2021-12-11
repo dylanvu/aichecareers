@@ -110,18 +110,23 @@ export const GetAllJobs = async (mongoclient: mongo.MongoClient, isInternship: b
         message = `:exclamation: :exclamation:     **Entry Level Job Postings for the Week: ${moment().format("MMM Do YY")}**     :exclamation: :exclamation:\n\n`;
     }
     let allJobs = await collection.find({});
-    await allJobs.forEach((job: any) => {
-        // Format into a message
-        let newMessage: string = job.title + ' at ' + job.company + '\n' + '<' + job.link + '>' + '\n\n';
-
-        // Discord has a 2000 character limit
-        if (message.length + newMessage.length < 2000) {
-            message = message + newMessage
-        } else {
-            messageList.push(message);
-            message = newMessage;
-        }
-    })
+    if (allJobs.length === 0) {
+        // No jobs
+        message = message + "No jobs this week... check back next week!\n\n;"
+    } else {
+        await allJobs.forEach((job: any) => {
+            // Format into a message
+            let newMessage: string = job.title + ' at ' + job.company + '\n' + '<' + job.link + '>' + '\n\n';
+    
+            // Discord has a 2000 character limit
+            if (message.length + newMessage.length < 2000) {
+                message = message + newMessage
+            } else {
+                messageList.push(message);
+                message = newMessage;
+            }
+        })
+    }
     // Push remaining message to array
     messageList.push(message);
     // Make divider between posting blocks

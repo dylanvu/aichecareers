@@ -173,22 +173,26 @@ var GetAllJobs = function (mongoclient, isInternship) { return __awaiter(void 0,
                 return [4 /*yield*/, collection.find({})];
             case 1:
                 allJobs = _a.sent();
-                return [4 /*yield*/, allJobs.forEach(function (job) {
-                        // Format into a message
-                        var newMessage = job.title + ' at ' + job.company + '\n' + '<' + job.link + '>' + '\n\n';
-                        // Discord has a 2000 character limit
-                        if (message.length + newMessage.length < 2000) {
-                            message = message + newMessage;
-                        }
-                        else {
-                            messageList.push(message);
-                            message = newMessage;
-                        }
-                    })
-                    // Push remaining message to array
-                ];
-            case 2:
+                if (!(allJobs.length === 0)) return [3 /*break*/, 2];
+                // No jobs
+                message = message + "No jobs this week... check back next week!\n\n;";
+                return [3 /*break*/, 4];
+            case 2: return [4 /*yield*/, allJobs.forEach(function (job) {
+                    // Format into a message
+                    var newMessage = job.title + ' at ' + job.company + '\n' + '<' + job.link + '>' + '\n\n';
+                    // Discord has a 2000 character limit
+                    if (message.length + newMessage.length < 2000) {
+                        message = message + newMessage;
+                    }
+                    else {
+                        messageList.push(message);
+                        message = newMessage;
+                    }
+                })];
+            case 3:
                 _a.sent();
+                _a.label = 4;
+            case 4:
                 // Push remaining message to array
                 messageList.push(message);
                 divider = "";
