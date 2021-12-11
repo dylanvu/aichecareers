@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-import { DailyEmails, WeeklyPostings } from './bin/cron';
+import { DailyEmails, WeeklyPostings, DebugDaily } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
 
 import * as base64 from 'js-base64';
@@ -80,7 +80,8 @@ client.on("message", (msg: Discord.Message) => {
     }
 
     // if (msg.content === "!debug") {
-    //     DailyEmails(client, mongoclient);
+    //     console.log("Debug");
+    //     DebugDaily(client, mongoclient);
     // }
 
     // if (msg.content === "!money") {

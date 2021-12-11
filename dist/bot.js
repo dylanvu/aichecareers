@@ -113,7 +113,8 @@ client.on("message", function (msg) {
         msg.reply("https://github.com/vu-dylan/aichecareers");
     }
     // if (msg.content === "!debug") {
-    //     DailyEmails(client, mongoclient);
+    //     console.log("Debug");
+    //     DebugDaily(client, mongoclient);
     // }
     // if (msg.content === "!money") {
     //     WeeklyPostings(client, mongoclient);

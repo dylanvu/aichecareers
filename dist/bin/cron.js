@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetJobArray = exports.GetAccessToken = exports.WeeklyPostings = exports.DailyEmails = void 0;
+exports.GetJobArray = exports.GetAccessToken = exports.DebugDaily = exports.WeeklyPostings = exports.DailyEmails = void 0;
 var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
@@ -140,6 +140,27 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
     });
 }); };
 exports.WeeklyPostings = WeeklyPostings;
+var DebugDaily = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        (0, exports.GetAccessToken)().then(function (accessToken) {
+            // Now that we have an access token, make call to the API to get the messages
+            GetEmails(accessToken).then(function (emailList) { return __awaiter(void 0, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, emailList.forEach(function (emailId) {
+                                UploadEmail(accessToken, emailId, mongoclient);
+                            })];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        });
+        return [2 /*return*/];
+    });
+}); };
+exports.DebugDaily = DebugDaily;
 // <------------------------- DiscordJS support function or something ------------------>
 var SendtoAll = function (client, mongoclient, message) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, allCursor, channelDeletion;

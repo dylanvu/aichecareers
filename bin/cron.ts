@@ -71,6 +71,16 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
     weeklyJob.start();
 }
 
+export const DebugDaily = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
+    GetAccessToken().then((accessToken: string) => {
+        // Now that we have an access token, make call to the API to get the messages
+        GetEmails(accessToken).then(async (emailList: string[]) => {
+            await emailList.forEach((emailId: string) => {
+                UploadEmail(accessToken, emailId, mongoclient);
+            });
+        });
+    });
+}
 
 // <------------------------- DiscordJS support function or something ------------------>
 
