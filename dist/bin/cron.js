@@ -133,7 +133,7 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
                     (0, mongo_1.WipeCollection)(mongoclient, false);
                 });
             });
-        });
+        }, null, true, 'America/Los_Angeles');
         console.log("Weekly posting started");
         weeklyJob.start();
         return [2 /*return*/];

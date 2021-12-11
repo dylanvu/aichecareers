@@ -66,7 +66,7 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
                 WipeCollection(mongoclient, false);
             });
         });
-    });
+    }, null, true, 'America/Los_Angeles');
     console.log("Weekly posting started")
     weeklyJob.start();
 }
