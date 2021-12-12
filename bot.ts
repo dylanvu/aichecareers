@@ -4,10 +4,8 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-import { DailyEmails, WeeklyPostings, DebugDaily } from './bin/cron';
+import { DailyEmails, WeeklyPostings } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
-
-import * as base64 from 'js-base64';
 
 dotenv.config();
 
@@ -78,6 +76,10 @@ client.on("message", (msg: Discord.Message) => {
     if (msg.content === "!github") {
         msg.reply("<https://github.com/vu-dylan/aichecareers>");
     }
+
+    // if (msg.content === "!nothing") {
+    //     DebugWeekly(client, mongoclient);
+    // }
 
     // if (msg.content === "!debug") {
     //     console.log("Debug");

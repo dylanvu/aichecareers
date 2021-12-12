@@ -173,11 +173,13 @@ var GetAllJobs = function (mongoclient, isInternship) { return __awaiter(void 0,
                 return [4 /*yield*/, collection.find({})];
             case 1:
                 allJobs = _a.sent();
-                if (!(allJobs.length === 0)) return [3 /*break*/, 2];
+                return [4 /*yield*/, allJobs.count()];
+            case 2:
+                if (!((_a.sent()) === 0)) return [3 /*break*/, 3];
                 // No jobs
-                message = message + "No jobs this week... check back next week!\n\n;";
-                return [3 /*break*/, 4];
-            case 2: return [4 /*yield*/, allJobs.forEach(function (job) {
+                message = message + "No jobs this week... check back next week!\n\n";
+                return [3 /*break*/, 5];
+            case 3: return [4 /*yield*/, allJobs.forEach(function (job) {
                     // Format into a message
                     var newMessage = job.title + ' at ' + job.company + '\n' + '<' + job.link + '>' + '\n\n';
                     // Discord has a 2000 character limit
@@ -189,10 +191,10 @@ var GetAllJobs = function (mongoclient, isInternship) { return __awaiter(void 0,
                         message = newMessage;
                     }
                 })];
-            case 3:
-                _a.sent();
-                _a.label = 4;
             case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5:
                 // Push remaining message to array
                 messageList.push(message);
                 divider = "";

@@ -112,6 +112,9 @@ client.on("message", function (msg) {
     if (msg.content === "!github") {
         msg.reply("<https://github.com/vu-dylan/aichecareers>");
     }
+    // if (msg.content === "!nothing") {
+    //     DebugWeekly(client, mongoclient);
+    // }
     // if (msg.content === "!debug") {
     //     console.log("Debug");
     //     DebugDaily(client, mongoclient);

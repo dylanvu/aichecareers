@@ -71,16 +71,34 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
     weeklyJob.start();
 }
 
-export const DebugDaily = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
-    GetAccessToken().then((accessToken: string) => {
-        // Now that we have an access token, make call to the API to get the messages
-        GetEmails(accessToken).then(async (emailList: string[]) => {
-            await emailList.forEach((emailId: string) => {
-                UploadEmail(accessToken, emailId, mongoclient);
-            });
-        });
-    });
-}
+
+// export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
+//     // Parse MongoDB collections, create the giant posting message, and send
+//     // 2000 character message limit!
+//     // Send job postings every Saturday at 10 AM PST
+
+//     // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
+//     GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
+//         // Find all the internship jobs first
+//         for (const message of messages) {
+//             await SendtoAll(client, mongoclient, message);
+//         }
+//         return
+//     }).then(() => {
+//         // Then find all the entry level jobs
+//         GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
+//             for (const messageEntry of messagesEntry) {
+//                 await SendtoAll(client, mongoclient, messageEntry);
+//             }
+//             return
+//         }).then(() => {
+//             // Clear database for new jobs
+//             WipeCollection(mongoclient, true);
+//             WipeCollection(mongoclient, false);
+//         });
+//     });
+//     console.log("Weekly posting started")
+// }
 
 // <------------------------- DiscordJS support function or something ------------------>
 

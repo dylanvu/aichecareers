@@ -110,9 +110,9 @@ export const GetAllJobs = async (mongoclient: mongo.MongoClient, isInternship: b
         message = `:exclamation: :exclamation:     **Entry Level Job Postings for the Week: ${moment().format("MMM Do YY")}**     :exclamation: :exclamation:\n\n`;
     }
     let allJobs = await collection.find({});
-    if (allJobs.length === 0) {
+    if (await allJobs.count() === 0) {
         // No jobs
-        message = message + "No jobs this week... check back next week!\n\n;"
+        message = message + "No jobs this week... check back next week!\n\n";
     } else {
         await allJobs.forEach((job: any) => {
             // Format into a message

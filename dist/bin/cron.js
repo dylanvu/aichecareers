@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetJobArray = exports.GetAccessToken = exports.DebugDaily = exports.WeeklyPostings = exports.DailyEmails = void 0;
+exports.GetJobArray = exports.GetAccessToken = exports.WeeklyPostings = exports.DailyEmails = void 0;
 var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
@@ -140,27 +140,32 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
     });
 }); };
 exports.WeeklyPostings = WeeklyPostings;
-var DebugDaily = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        (0, exports.GetAccessToken)().then(function (accessToken) {
-            // Now that we have an access token, make call to the API to get the messages
-            GetEmails(accessToken).then(function (emailList) { return __awaiter(void 0, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, emailList.forEach(function (emailId) {
-                                UploadEmail(accessToken, emailId, mongoclient);
-                            })];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
-        });
-        return [2 /*return*/];
-    });
-}); };
-exports.DebugDaily = DebugDaily;
+// export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
+//     // Parse MongoDB collections, create the giant posting message, and send
+//     // 2000 character message limit!
+//     // Send job postings every Saturday at 10 AM PST
+//     // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
+//     GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
+//         // Find all the internship jobs first
+//         for (const message of messages) {
+//             await SendtoAll(client, mongoclient, message);
+//         }
+//         return
+//     }).then(() => {
+//         // Then find all the entry level jobs
+//         GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
+//             for (const messageEntry of messagesEntry) {
+//                 await SendtoAll(client, mongoclient, messageEntry);
+//             }
+//             return
+//         }).then(() => {
+//             // Clear database for new jobs
+//             WipeCollection(mongoclient, true);
+//             WipeCollection(mongoclient, false);
+//         });
+//     });
+//     console.log("Weekly posting started")
+// }
 // <------------------------- DiscordJS support function or something ------------------>
 var SendtoAll = function (client, mongoclient, message) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, allCursor, channelDeletion;
