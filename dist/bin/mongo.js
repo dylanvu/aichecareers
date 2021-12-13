@@ -54,7 +54,7 @@ var AddChanneltoDatabase = function (mongoclient, channelid, guildid, msg, colle
                 if (!someCursor) {
                     console.log("Adding new channel with id: " + channelid);
                     if (collectionName == "ActiveChannels") {
-                        msg.reply("You've subscribed to Chemical Engineering jobs! Jobs will be posted on Friday at 8:00 PM PST!");
+                        msg.reply("You've subscribed to Chemical Engineering jobs! Jobs will be posted on Saturday at 9:00 AM PST!");
                     }
                     else {
                         console.log("No collection name of <" + collectionName + "> matched but new channel added");
