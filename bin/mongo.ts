@@ -256,9 +256,9 @@ export const WipeCollection = async (mongoclient: mongo.MongoClient, isInternshi
 const CheckUnique = async (collection: any, job: Job): Promise<boolean> => {
     // used any type cuz I'm too lazy to figure out what exactly the type of this mongodb collection object is
     let duplicate = await collection.findOne({
-        title: job.title,
+        // title: job.title,
         link: job.link,
-        company: job.company
+        // company: job.company
     });
 
     if (duplicate) {
