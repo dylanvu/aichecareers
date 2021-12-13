@@ -241,7 +241,7 @@ var EmbedGetAllJobs = function (mongoclient, isInternship) { return __awaiter(vo
             case 2:
                 if (!((_a.sent()) === 0)) return [3 /*break*/, 3];
                 // No jobs
-                embed.setDescription("No jobs found this week... check back next week!");
+                embed.setDescription("No jobs found... check back next time!");
                 return [3 /*break*/, 5];
             case 3: return [4 /*yield*/, allJobs.forEach(function (job) {
                     var jobHeader = job.title + ' at ' + job.company;

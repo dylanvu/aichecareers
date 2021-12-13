@@ -141,6 +141,36 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
     });
 }); };
 exports.WeeklyPostings = WeeklyPostings;
+// Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
+// export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
+//     // Parse MongoDB collections, create the giant posting message, and send
+//     // 2000 character message limit!
+//     // Send job postings every Saturday at 10 AM PST
+//     let weeklyJob = new cron.CronJob('0 0 9 * * 6', () => {
+//         // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
+//         EmbedGetAllJobs(mongoclient, true).then(async (embeds: Discord.MessageEmbed[]) => {
+//             // Find all the internship jobs first
+//             for (const embed of embeds) {
+//                 await SendtoAll(client, mongoclient, embed);
+//             }
+//             return
+//         }).then(() => {
+//             // Then find all the entry level jobs
+//             EmbedGetAllJobs(mongoclient, false).then(async (embeds: Discord.MessageEmbed[]) => {
+//                 for (const embed of embeds) {
+//                     await SendtoAll(client, mongoclient, embed);
+//                 }
+//                 return
+//             }).then(() => {
+//                 // Clear database for new jobs
+//                 WipeCollection(mongoclient, true);
+//                 WipeCollection(mongoclient, false);
+//             });
+//         });
+//     }, null, true, 'America/Los_Angeles');
+//     console.log("Weekly posting started")
+//     weeklyJob.start();
+// }
 var DebugWeekly = function (client, mongoclient, channel_id) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         // Parse MongoDB collections, create the giant posting message, and send
@@ -238,6 +268,30 @@ var SendtoAll = function (client, mongoclient, message) { return __awaiter(void 
         }
     });
 }); };
+// const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, embed: Discord.MessageEmbed) => {
+//     let channelCollection = await mongoclient.db().collection('ActiveChannels')
+//     let allCursor = channelCollection.find();
+//     let channelDeletion: string[] = []
+//     await allCursor.forEach((thisChannel: any) => {
+//         // There was a bug where a channel did not exist for some reason except it was in the database, and I couldn't find it at all
+//         // If DiscordJS can find the channel, send the question. Else, DiscordJS can't find a channel and delete it from the database
+//         if (client.channels.cache.get(thisChannel.channel_id)) {
+//             let channel = client.channels.cache.get(thisChannel.channel_id) as Discord.TextChannel; // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
+//             channel.send({embeds: [embed]});
+//         } else {
+//             console.log(thisChannel.channel_id + " does not exist. Deleting from database.")
+//             channelDeletion.push(thisChannel.channel_id);
+//         }
+//     })
+//     // Delete all undefined channels
+//     if (channelDeletion.length != 0) {
+//         channelDeletion.forEach((channelid) => {
+//             channelCollection.deleteOne({
+//                 channel_id : channelid
+//             })
+//         })
+//     }
+// }
 var SendToOne = function (client, channel_id, embed) { return __awaiter(void 0, void 0, void 0, function () {
     var channel;
     return __generator(this, function (_a) {

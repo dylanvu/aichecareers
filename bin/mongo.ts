@@ -171,7 +171,7 @@ export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternsh
     let allJobs = await collection.find({});
     if (await allJobs.count() === 0) {
         // No jobs
-        embed.setDescription("No jobs found this week... check back next week!");
+        embed.setDescription("No jobs found... check back next time!");
     } else {
         await allJobs.forEach((job: any) => {
             let jobHeader: string = job.title + ' at ' + job.company;
