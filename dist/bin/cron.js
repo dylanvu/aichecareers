@@ -80,6 +80,7 @@ var DailyEmails = function (client, mongoclient) { return __awaiter(void 0, void
     });
 }); };
 exports.DailyEmails = DailyEmails;
+// Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
 var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
     var weeklyJob;
     return __generator(this, function (_a) {
@@ -337,6 +338,6 @@ var ParseCompanyName = function (name) {
 var isInternship = function (title) {
     // Issue: what if the title contains international, or something with intern like internal? oh well
     var lowerTitle = title.toLowerCase();
-    return lowerTitle.includes("intern") || lowerTitle.includes("co-op");
+    return lowerTitle.includes("intern") || lowerTitle.includes("co-op") || lowerTitle.includes("coop") || lowerTitle.includes("student");
 };
 //# sourceMappingURL=cron.js.map

@@ -41,6 +41,7 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
     dailyJob.start();
 }
 
+// Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
 export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
     // Parse MongoDB collections, create the giant posting message, and send
     // 2000 character message limit!
@@ -242,5 +243,5 @@ const ParseCompanyName = (name: string): string => {
 const isInternship = (title: string): boolean => {
     // Issue: what if the title contains international, or something with intern like internal? oh well
     let lowerTitle: string = title.toLowerCase();
-    return lowerTitle.includes("intern") || lowerTitle.includes("co-op");
+    return lowerTitle.includes("intern") || lowerTitle.includes("co-op") || lowerTitle.includes("coop") || lowerTitle.includes("student");
 }
