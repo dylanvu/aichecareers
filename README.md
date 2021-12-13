@@ -10,6 +10,8 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 ## Adding the Bot
 * Make sure you're an admin
 * Use this link: https://discord.com/api/oauth2/authorize?client_id=917917515542310942&permissions=3072&scope=bot
+* In the channel(s) that you want the bot to post the job listings, type in `!subscribe`
+
 ## Removing the Bot
 * Type in `!unsubscribe` in all subscribed channels
 * Kick the bot out of the server
