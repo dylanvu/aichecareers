@@ -49,7 +49,8 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * https://github.com/oceanroleplay/discord.ts-example/blob/main/src/client.ts
 * https://discord.js.org/#/docs/main/stable/class/Intents?scrollTo=s-FLAGS
 * https://discord.com/developers/docs/topics/gateway#list-of-intents
-
+* https://discord.com/developers/docs/resources/channel#embed-limits
+* https://discordjs.guide/popular-topics/embeds.html#embed-preview
 
 ### GMail API and Related to OAuth/Access
 * https://ibm.com/docs/en/app-connect/cloud?topic=gmail-connecting-google-application-by-providing-credentials-app-connect-use-basic-oauth

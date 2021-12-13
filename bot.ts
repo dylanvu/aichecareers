@@ -4,8 +4,9 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-import { DailyEmails, WeeklyPostings } from './bin/cron';
+import { DailyEmails, DebugWeekly, WeeklyPostings } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
+import * as moment from 'moment'
 
 dotenv.config();
 
@@ -81,10 +82,22 @@ client.on("message", (msg: Discord.Message) => {
     //     DebugWeekly(client, mongoclient);
     // }
 
-    // if (msg.content === "!debug") {
-    //     console.log("Debug");
-    //     DebugDaily(client, mongoclient);
-    // }
+    if (msg.content === "!debug") {
+        let [channelid, _] = GetMessageIDs(msg);
+        DebugWeekly(client, mongoclient, channelid);
+        // let channel = client.channels.cache.get(channelid) as Discord.TextChannel;
+        // let sampleObject = [{name: 'Testing name 1', value: 'Testing value'}, {name: 'Testing name 2', value: 'Testing value'}, {name: 'Testing name 2', value: 'Testing value'}]
+
+        // const sampleEmbed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        // .setColor('#0072b1') // LinkedIn Blue
+        // .setTitle(`:rotating_light: :rotating_light:     **Internship/Co-Op Postings for the Week: ${moment().format("MMM Do YY")}**     :rotating_light: :rotating_light:\n\n`);
+
+        // sampleObject.forEach((field) => {
+        //     sampleEmbed.addField(field.name, field.value);
+        // });
+
+        // channel.send({embeds: [sampleEmbed]});
+    }
 
     // if (msg.content === "!money") {
     //     WeeklyPostings(client, mongoclient);

@@ -6,7 +6,7 @@ import * as cheerio from 'cheerio';
 import * as base64 from 'js-base64';
 
 import {Job} from '../classes/job';
-import {UploadJob, GetAllJobs, WipeCollection} from './mongo';
+import {UploadJob, GetAllJobs, WipeCollection, EmbedGetAllJobs} from './mongo';
 
 dotenv.config();
 
@@ -73,33 +73,33 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
 }
 
 
-// export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
-//     // Parse MongoDB collections, create the giant posting message, and send
-//     // 2000 character message limit!
-//     // Send job postings every Saturday at 10 AM PST
+export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.MongoClient, channel_id: string) => {
+    // Parse MongoDB collections, create the giant posting message, and send
+    // 2000 character message limit!
+    // Send job postings every Saturday at 10 AM PST
 
-//     // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
-//     GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
-//         // Find all the internship jobs first
-//         for (const message of messages) {
-//             await SendtoAll(client, mongoclient, message);
-//         }
-//         return
-//     }).then(() => {
-//         // Then find all the entry level jobs
-//         GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
-//             for (const messageEntry of messagesEntry) {
-//                 await SendtoAll(client, mongoclient, messageEntry);
-//             }
-//             return
-//         }).then(() => {
-//             // Clear database for new jobs
-//             WipeCollection(mongoclient, true);
-//             WipeCollection(mongoclient, false);
-//         });
-//     });
-//     console.log("Weekly posting started")
-// }
+    // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
+    EmbedGetAllJobs(mongoclient, true).then(async (embeds: Discord.MessageEmbed[]) => {
+        // Find all the internship jobs first
+        for (const embed of embeds) {
+            await SendToOne(client, channel_id, embed);
+        }
+        return
+    }).then(() => {
+        // Then find all the entry level jobs
+        EmbedGetAllJobs(mongoclient, false).then(async (embeds: Discord.MessageEmbed[]) => {
+            for (const embed of embeds) {
+                await SendToOne(client, channel_id, embed);
+            }
+            return
+        }).then(() => {
+            // Clear database for new jobs
+            // WipeCollection(mongoclient, true);
+            // WipeCollection(mongoclient, false);
+        });
+    });
+    console.log("Weekly posting started")
+}
 
 // <------------------------- DiscordJS support function or something ------------------>
 
@@ -130,6 +130,12 @@ const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient,
             })
         })
     }
+}
+
+const SendToOne = async (client: Discord.Client, channel_id: string, embed: Discord.MessageEmbed) => {
+
+    let channel = client.channels.cache.get(channel_id) as Discord.TextChannel; // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
+    channel.send({embeds: [embed]});
 }
 
 
@@ -233,7 +239,7 @@ const ParseJobLink = (url: string): string => {
     return url.split("?")[0];
 }
 
-const ParseCompanyName = (name: string): string => {
+export const ParseCompanyName = (name: string): string => {
     // This function removes the location
     // Sample input: 'AveXis, Inc. · Durham, North Carolina, United States'
     // Sample output: 'AveXis, Inc.'

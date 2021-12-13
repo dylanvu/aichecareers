@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetJobArray = exports.GetAccessToken = exports.WeeklyPostings = exports.DailyEmails = void 0;
+exports.ParseCompanyName = exports.GetJobArray = exports.GetAccessToken = exports.DebugWeekly = exports.WeeklyPostings = exports.DailyEmails = void 0;
 var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
@@ -141,32 +141,65 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
     });
 }); };
 exports.WeeklyPostings = WeeklyPostings;
-// export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
-//     // Parse MongoDB collections, create the giant posting message, and send
-//     // 2000 character message limit!
-//     // Send job postings every Saturday at 10 AM PST
-//     // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
-//     GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
-//         // Find all the internship jobs first
-//         for (const message of messages) {
-//             await SendtoAll(client, mongoclient, message);
-//         }
-//         return
-//     }).then(() => {
-//         // Then find all the entry level jobs
-//         GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
-//             for (const messageEntry of messagesEntry) {
-//                 await SendtoAll(client, mongoclient, messageEntry);
-//             }
-//             return
-//         }).then(() => {
-//             // Clear database for new jobs
-//             WipeCollection(mongoclient, true);
-//             WipeCollection(mongoclient, false);
-//         });
-//     });
-//     console.log("Weekly posting started")
-// }
+var DebugWeekly = function (client, mongoclient, channel_id) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        // Parse MongoDB collections, create the giant posting message, and send
+        // 2000 character message limit!
+        // Send job postings every Saturday at 10 AM PST
+        // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
+        (0, mongo_1.EmbedGetAllJobs)(mongoclient, true).then(function (embeds) { return __awaiter(void 0, void 0, void 0, function () {
+            var _i, embeds_1, embed;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _i = 0, embeds_1 = embeds;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < embeds_1.length)) return [3 /*break*/, 4];
+                        embed = embeds_1[_i];
+                        return [4 /*yield*/, SendToOne(client, channel_id, embed)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); }).then(function () {
+            // Then find all the entry level jobs
+            (0, mongo_1.EmbedGetAllJobs)(mongoclient, false).then(function (embeds) { return __awaiter(void 0, void 0, void 0, function () {
+                var _i, embeds_2, embed;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _i = 0, embeds_2 = embeds;
+                            _a.label = 1;
+                        case 1:
+                            if (!(_i < embeds_2.length)) return [3 /*break*/, 4];
+                            embed = embeds_2[_i];
+                            return [4 /*yield*/, SendToOne(client, channel_id, embed)];
+                        case 2:
+                            _a.sent();
+                            _a.label = 3;
+                        case 3:
+                            _i++;
+                            return [3 /*break*/, 1];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            }); }).then(function () {
+                // Clear database for new jobs
+                // WipeCollection(mongoclient, true);
+                // WipeCollection(mongoclient, false);
+            });
+        });
+        console.log("Weekly posting started");
+        return [2 /*return*/];
+    });
+}); };
+exports.DebugWeekly = DebugWeekly;
 // <------------------------- DiscordJS support function or something ------------------>
 var SendtoAll = function (client, mongoclient, message) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, allCursor, channelDeletion;
@@ -203,6 +236,14 @@ var SendtoAll = function (client, mongoclient, message) { return __awaiter(void 
                 }
                 return [2 /*return*/];
         }
+    });
+}); };
+var SendToOne = function (client, channel_id, embed) { return __awaiter(void 0, void 0, void 0, function () {
+    var channel;
+    return __generator(this, function (_a) {
+        channel = client.channels.cache.get(channel_id);
+        channel.send({ embeds: [embed] });
+        return [2 /*return*/];
     });
 }); };
 // <----------------- Gmail API and related -------------------->
@@ -335,6 +376,7 @@ var ParseCompanyName = function (name) {
     // Sample output: 'AveXis, Inc.'
     return name.split(" · ")[0];
 };
+exports.ParseCompanyName = ParseCompanyName;
 var isInternship = function (title) {
     // Issue: what if the title contains international, or something with intern like internal? oh well
     var lowerTitle = title.toLowerCase();

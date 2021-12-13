@@ -36,8 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WipeCollection = exports.GetAllJobs = exports.UploadJob = exports.RemoveChannelFromDatabase = exports.AddChanneltoDatabase = void 0;
+exports.WipeCollection = exports.EmbedGetAllJobs = exports.GetAllJobs = exports.UploadJob = exports.RemoveChannelFromDatabase = exports.AddChanneltoDatabase = void 0;
+var Discord = require("discord.js");
 var moment = require("moment");
+var cron_1 = require("./cron");
 var AddChanneltoDatabase = function (mongoclient, channelid, guildid, msg, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, someCursor;
     return __generator(this, function (_a) {
@@ -215,6 +217,105 @@ var GetAllJobs = function (mongoclient, isInternship) { return __awaiter(void 0,
     });
 }); };
 exports.GetAllJobs = GetAllJobs;
+var EmbedGetAllJobs = function (mongoclient, isInternship) { return __awaiter(void 0, void 0, void 0, function () {
+    var collection, embedList, jobList, embed, allJobs;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (isInternship) {
+                    collection = mongoclient.db().collection('Internships');
+                }
+                else {
+                    collection = mongoclient.db().collection('EntryLevel');
+                }
+                embedList = [];
+                jobList = [];
+                embed = new Discord.MessageEmbed()
+                    .setColor('#0072b1');
+                if (isInternship) {
+                    embed.setTitle(":rotating_light: :rotating_light:     **Internship/Co-Op Postings for the Week: ".concat(moment().format("MMM Do YY"), "**     :rotating_light: :rotating_light:\n\n"));
+                }
+                else {
+                    embed.setTitle(":exclamation: :exclamation:     **Entry Level Job Postings for the Week: ".concat(moment().format("MMM Do YY"), "**     :exclamation: :exclamation:\n\n"));
+                }
+                return [4 /*yield*/, collection.find({})];
+            case 1:
+                allJobs = _a.sent();
+                return [4 /*yield*/, allJobs.count()];
+            case 2:
+                if (!((_a.sent()) === 0)) return [3 /*break*/, 3];
+                // No jobs
+                embed.setDescription("No jobs found this week... check back next week!");
+                return [3 /*break*/, 5];
+            case 3: return [4 /*yield*/, allJobs.forEach(function (job) {
+                    var jobHeader = job.title + ' at ' + job.company;
+                    // Discord has a 256 field name length: https://discord.com/developers/docs/resources/channel#embed-limits
+                    var headerOption = 0;
+                    while (jobHeader.length > 256) {
+                        if (headerOption === 0) {
+                            // First, try removing the location
+                            jobHeader = job.title + ' at ' + (0, cron_1.ParseCompanyName)(job.company);
+                        }
+                        else if (headerOption === 1) {
+                            // Then, just try sending the title
+                            jobHeader = job.title;
+                        }
+                        else {
+                            // Send generic title
+                            jobHeader = "Job title is too long! Open the link!";
+                        }
+                        headerOption++;
+                    }
+                    // Embeds have a 25 field limit
+                    if (jobList.length <= 25) {
+                        // Push as an object
+                        jobList.push({ name: jobHeader, value: '<' + job.link + '>' });
+                    }
+                    else {
+                        // Format the embed fields and push embed to embed array, reset embed and jobList
+                        jobList.forEach(function (job) {
+                            embed.addField(job.name, job.value);
+                        });
+                        embedList.push(embed);
+                        embed = new Discord.MessageEmbed()
+                            .setColor('#0072b1');
+                        if (isInternship) {
+                            embed.setTitle(":rotating_light: :rotating_light:     **Internship/Co-Op Postings Part ".concat(embedList.length + 1, " for the Week: ").concat(moment().format("MMM Do YY"), "**     :rotating_light: :rotating_light:\n\n"));
+                        }
+                        else {
+                            embed.setTitle(":exclamation: :exclamation:     **Entry Level Job Postings Part ".concat(embedList.length + 1, " for the Week: ").concat(moment().format("MMM Do YY"), "**     :exclamation: :exclamation:\n\n"));
+                        }
+                        jobList = [];
+                    }
+                })];
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5:
+                // Push remaining jobs to embed
+                jobList.forEach(function (job) {
+                    embed.addField(job.name, job.value);
+                });
+                embedList.push(embed);
+                // // Make divider between posting blocks
+                // let divider: string = "";
+                // let hyphens: number = 5;
+                // let breaks: number = 10;
+                // for (let i: number = 0; i < hyphens; i++) {
+                //     divider = divider + "-";
+                // }
+                // for (let i: number = 0; i < breaks; i++) {
+                //     divider = divider + "\n";
+                // }
+                // for (let i: number = 0; i < hyphens; i++) {
+                //     divider = divider + "-";
+                // }
+                // messageList.push(divider);
+                return [2 /*return*/, embedList];
+        }
+    });
+}); };
+exports.EmbedGetAllJobs = EmbedGetAllJobs;
 var WipeCollection = function (mongoclient, isInternship) { return __awaiter(void 0, void 0, void 0, function () {
     var collection;
     return __generator(this, function (_a) {
