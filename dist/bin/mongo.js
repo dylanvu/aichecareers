@@ -231,7 +231,8 @@ var EmbedGetAllJobs = function (mongoclient, isInternship) { return __awaiter(vo
                 embedList = [];
                 jobList = [];
                 embed = new Discord.MessageEmbed()
-                    .setColor('#0072b1');
+                    .setColor('#0072b1')
+                    .setFooter('Wondering how I work? https://github.com/vu-dylan/aichecareers');
                 if (isInternship) {
                     embed.setTitle(":rotating_light: :rotating_light:     **Internship/Co-Op Postings for the Week: ".concat(moment().format("MMM Do YY"), "**     :rotating_light: :rotating_light:\n\n"));
                 }

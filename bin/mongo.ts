@@ -164,7 +164,8 @@ export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternsh
 
     // Generate initial embed
     let embed: Discord.MessageEmbed = new Discord.MessageEmbed()
-    .setColor('#0072b1');
+    .setColor('#0072b1')
+    .setFooter('Wondering how I work? https://github.com/vu-dylan/aichecareers');
 
     if (isInternship) {
         embed.setTitle(`:rotating_light: :rotating_light:     **Internship/Co-Op Postings for the Week: ${moment().format("MMM Do YY")}**     :rotating_light: :rotating_light:\n\n`)
