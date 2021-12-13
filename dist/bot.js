@@ -96,7 +96,7 @@ client.on("ready", function () {
     var _a;
     console.log("Logged in as ".concat((_a = client.user) === null || _a === void 0 ? void 0 : _a.tag, "!")); // Use ? to enable this to be undefined: https://stackoverflow.com/questions/37632760/what-is-the-question-mark-for-in-a-typescript-parameter-name
 });
-client.on("message", function (msg) {
+client.on("messageCreate", function (msg) {
     // Add the bot to the database
     if (msg.content === "!subscribe") {
         var _a = GetMessageIDs(msg), channelid = _a[0], guildid = _a[1];

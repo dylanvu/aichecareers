@@ -149,12 +149,7 @@ export const GetAllJobs = async (mongoclient: mongo.MongoClient, isInternship: b
 } 
 
 export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternship: boolean): Promise<Discord.MessageEmbed[]> => {
-    let collection;
-    if (isInternship) {
-        collection = mongoclient.db().collection('Internships');
-    } else {
-        collection = mongoclient.db().collection('EntryLevel');
-    }
+    let collection = isInternship ? mongoclient.db().collection('Internships') : mongoclient.db().collection('EntryLevel');
 
     // Two arrays: one of embeds to send
     let embedList: Discord.MessageEmbed[] = [];
@@ -180,7 +175,6 @@ export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternsh
     } else {
         await allJobs.forEach((job: any) => {
             let jobHeader: string = job.title + ' at ' + job.company;
-
             // Discord has a 256 field name length: https://discord.com/developers/docs/resources/channel#embed-limits
             let headerOption = 0;
             while (jobHeader.length > 256) {
@@ -210,7 +204,8 @@ export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternsh
 
                 embedList.push(embed);
                 embed = new Discord.MessageEmbed()
-                .setColor('#0072b1');
+                .setColor('#0072b1')
+                .setFooter('Wondering how I work? https://github.com/vu-dylan/aichecareers');;
 
                 if (isInternship) {
                     embed.setTitle(`:rotating_light: :rotating_light:     **Internship/Co-Op Postings Part ${embedList.length + 1} for the Week: ${moment().format("MMM Do YY")}**     :rotating_light: :rotating_light:\n\n`)
@@ -240,7 +235,6 @@ export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternsh
     //     divider = divider + "-";
     // }
     // messageList.push(divider);
-
     return embedList;
 } 
 

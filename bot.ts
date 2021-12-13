@@ -58,7 +58,7 @@ client.on("ready", () => {
     console.log(`Logged in as ${client.user?.tag}!`); // Use ? to enable this to be undefined: https://stackoverflow.com/questions/37632760/what-is-the-question-mark-for-in-a-typescript-parameter-name
 });
 
-client.on("message", (msg: Discord.Message) => {
+client.on("messageCreate", (msg: Discord.Message) => {
     // Add the bot to the database
     if (msg.content === "!subscribe") {
         let [channelid, guildid] = GetMessageIDs(msg);

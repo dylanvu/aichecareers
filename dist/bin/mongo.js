@@ -222,12 +222,7 @@ var EmbedGetAllJobs = function (mongoclient, isInternship) { return __awaiter(vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (isInternship) {
-                    collection = mongoclient.db().collection('Internships');
-                }
-                else {
-                    collection = mongoclient.db().collection('EntryLevel');
-                }
+                collection = isInternship ? mongoclient.db().collection('Internships') : mongoclient.db().collection('EntryLevel');
                 embedList = [];
                 jobList = [];
                 embed = new Discord.MessageEmbed()
@@ -279,7 +274,9 @@ var EmbedGetAllJobs = function (mongoclient, isInternship) { return __awaiter(vo
                         });
                         embedList.push(embed);
                         embed = new Discord.MessageEmbed()
-                            .setColor('#0072b1');
+                            .setColor('#0072b1')
+                            .setFooter('Wondering how I work? https://github.com/vu-dylan/aichecareers');
+                        ;
                         if (isInternship) {
                             embed.setTitle(":rotating_light: :rotating_light:     **Internship/Co-Op Postings Part ".concat(embedList.length + 1, " for the Week: ").concat(moment().format("MMM Do YY"), "**     :rotating_light: :rotating_light:\n\n"));
                         }
