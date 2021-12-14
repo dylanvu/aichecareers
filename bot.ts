@@ -82,9 +82,9 @@ client.on("messageCreate", (msg: Discord.Message) => {
     //     DebugWeekly(client, mongoclient);
     // }
 
-    if (msg.content === "!debug") {
-        let [channelid, _] = GetMessageIDs(msg);
-        DebugWeekly(client, mongoclient, channelid);
+    // if (msg.content === "!debug") {
+        // let [channelid, _] = GetMessageIDs(msg);
+        // DebugWeekly(client, mongoclient, channelid);
         // let channel = client.channels.cache.get(channelid) as Discord.TextChannel;
         // let sampleObject = [{name: 'Testing name 1', value: 'Testing value'}, {name: 'Testing name 2', value: 'Testing value'}, {name: 'Testing name 2', value: 'Testing value'}]
 
@@ -97,7 +97,7 @@ client.on("messageCreate", (msg: Discord.Message) => {
         // });
 
         // channel.send({embeds: [sampleEmbed]});
-    }
+    // }
 
     // if (msg.content === "!money") {
     //     WeeklyPostings(client, mongoclient);
