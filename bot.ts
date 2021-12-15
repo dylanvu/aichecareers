@@ -83,6 +83,7 @@ client.on("messageCreate", (msg: Discord.Message) => {
     // }
 
     if (msg.content === "!debug") {
+        console.log("Debug")
         DebugDailyEmails(client, mongoclient);
     }
 

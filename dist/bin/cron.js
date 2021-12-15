@@ -81,36 +81,33 @@ var DailyEmails = function (client, mongoclient) { return __awaiter(void 0, void
 }); };
 exports.DailyEmails = DailyEmails;
 var DebugDailyEmails = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
-    var dailyJob;
     return __generator(this, function (_a) {
-        dailyJob = new cron.CronJob('0 59 23 * * *', function () {
-            console.log("Getting today's postings");
-            try {
-                // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
-                (0, exports.GetAccessToken)().then(function (accessToken) {
-                    // Now that we have an access token, make call to the API to get the messages
-                    GetEmails(accessToken).then(function (emailList) { return __awaiter(void 0, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, emailList.forEach(function (emailId) {
-                                        UploadEmail(accessToken, emailId, mongoclient);
-                                    })];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); });
-                });
-            }
-            catch (error) {
-                console.error(error);
-                // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
-                // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
-            }
-        }, null, true, 'America/Los_Angeles');
-        console.log("Daily Email Job");
-        dailyJob.start();
+        // Every day, look through gmail to get the newest job alerts that haven't been read
+        // Project is in the fake email
+        // Refresh token: ibm.com/docs/en/app-connect/cloud?topic=gmail-connecting-google-application-by-providing-credentials-app-connect-use-basic-oauth
+        // Define the daily email getting job at 11:59 PM
+        console.log("Getting today's postings");
+        try {
+            // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
+            (0, exports.GetAccessToken)().then(function (accessToken) {
+                // Now that we have an access token, make call to the API to get the messages
+                GetEmails(accessToken).then(function (emailList) { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, emailList.forEach(function (emailId) {
+                                    UploadEmail(accessToken, emailId, mongoclient);
+                                })];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+            });
+        }
+        catch (error) {
+            console.error(error);
+        }
         return [2 /*return*/];
     });
 }); };

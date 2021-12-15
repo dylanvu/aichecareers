@@ -116,6 +116,7 @@ client.on("messageCreate", function (msg) {
     //     DebugWeekly(client, mongoclient);
     // }
     if (msg.content === "!debug") {
+        console.log("Debug");
         (0, cron_1.DebugDailyEmails)(client, mongoclient);
     }
     // if (msg.content === "!money") {

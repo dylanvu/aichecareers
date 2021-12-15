@@ -48,26 +48,20 @@ export const DebugDailyEmails = async (client: Discord.Client, mongoclient: mong
 
     // Define the daily email getting job at 11:59 PM
 
-    let dailyJob = new cron.CronJob('0 59 23 * * *', () => {
-        console.log("Getting today's postings");
-        try {
-            // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
-            GetAccessToken().then((accessToken: string) => {
-                // Now that we have an access token, make call to the API to get the messages
-                GetEmails(accessToken).then(async (emailList: string[]) => {
-                    await emailList.forEach((emailId: string) => {
-                        UploadEmail(accessToken, emailId, mongoclient);
-                    })
-                });
+    console.log("Getting today's postings");
+    try {
+        // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
+        GetAccessToken().then((accessToken: string) => {
+            // Now that we have an access token, make call to the API to get the messages
+            GetEmails(accessToken).then(async (emailList: string[]) => {
+                await emailList.forEach((emailId: string) => {
+                    UploadEmail(accessToken, emailId, mongoclient);
+                })
             });
-        } catch (error) {
-            console.error(error);
-            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
-            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
-        }
-    }, null, true, 'America/Los_Angeles');
-    console.log("Daily Email Job")
-    dailyJob.start();
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 // Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
