@@ -120,7 +120,8 @@ client.on("messageCreate", function (msg) {
     //     DebugDailyEmails(client, mongoclient);
     // }
     if (msg.content === "!money") {
-        (0, cron_1.WeeklyPostings)(client, mongoclient);
+        var _c = GetMessageIDs(msg), channelid = _c[0], guildid = _c[1];
+        (0, cron_1.DebugWeekly)(client, mongoclient, channelid);
     }
     // if (msg.content === "!purge") {
     //     WipeCollection(mongoclient, true);

@@ -88,7 +88,8 @@ client.on("messageCreate", (msg: Discord.Message) => {
     // }
 
     if (msg.content === "!money") {
-        WeeklyPostings(client, mongoclient);
+        let [channelid, guildid] = GetMessageIDs(msg);
+        DebugWeekly(client, mongoclient, channelid);
     }
 
     // if (msg.content === "!purge") {
