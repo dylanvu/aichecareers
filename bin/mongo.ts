@@ -208,9 +208,9 @@ export const EmbedGetAllJobs = async (mongoclient: mongo.MongoClient, isInternsh
                 .setFooter('Wondering how I work? https://github.com/vu-dylan/aichecareers');;
 
                 if (isInternship) {
-                    embed.setTitle(`:rotating_light: :rotating_light:     **Internship/Co-Op Postings Part ${embedList.length + 1} for the Week: ${moment().format("MMM Do YY")}**     :rotating_light: :rotating_light:\n\n`)
+                    embed.setTitle(`:rotating_light:     **Internship/Co-Op Postings Part ${embedList.length + 1} for the Week: ${moment().format("MMM Do YY")}**     :rotating_light:\n\n`)
                 } else {
-                    embed.setTitle(`:exclamation: :exclamation:     **Entry Level Job Postings Part ${embedList.length + 1} for the Week: ${moment().format("MMM Do YY")}**     :exclamation: :exclamation:\n\n`)
+                    embed.setTitle(`:exclamation:     **Entry Level Job Postings Part ${embedList.length + 1} for the Week: ${moment().format("MMM Do YY")}**     :exclamation:\n\n`)
                 }
                 jobList = [];
             }
