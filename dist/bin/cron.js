@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParseCompanyName = exports.GetJobArray = exports.GetAccessToken = exports.DebugWeekly = exports.WeeklyPostings = exports.DailyEmails = void 0;
+exports.ParseCompanyName = exports.GetJobArray = exports.GetAccessToken = exports.DebugWeekly = exports.WeeklyPostings = exports.DebugDailyEmails = exports.DailyEmails = void 0;
 var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
@@ -80,6 +80,41 @@ var DailyEmails = function (client, mongoclient) { return __awaiter(void 0, void
     });
 }); };
 exports.DailyEmails = DailyEmails;
+var DebugDailyEmails = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
+    var dailyJob;
+    return __generator(this, function (_a) {
+        dailyJob = new cron.CronJob('0 59 23 * * *', function () {
+            console.log("Getting today's postings");
+            try {
+                // Generate new access token: https://stackoverflow.com/questions/10631042/how-to-generate-access-token-using-refresh-token-through-google-drive-api
+                (0, exports.GetAccessToken)().then(function (accessToken) {
+                    // Now that we have an access token, make call to the API to get the messages
+                    GetEmails(accessToken).then(function (emailList) { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, emailList.forEach(function (emailId) {
+                                        UploadEmail(accessToken, emailId, mongoclient);
+                                    })];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                });
+            }
+            catch (error) {
+                console.error(error);
+                // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
+                // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
+            }
+        }, null, true, 'America/Los_Angeles');
+        console.log("Daily Email Job");
+        dailyJob.start();
+        return [2 /*return*/];
+    });
+}); };
+exports.DebugDailyEmails = DebugDailyEmails;
 // Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
 // export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
 //     // Parse MongoDB collections, create the giant posting message, and send

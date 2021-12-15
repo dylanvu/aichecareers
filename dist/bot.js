@@ -115,19 +115,9 @@ client.on("messageCreate", function (msg) {
     // if (msg.content === "!nothing") {
     //     DebugWeekly(client, mongoclient);
     // }
-    // if (msg.content === "!debug") {
-    // let [channelid, _] = GetMessageIDs(msg);
-    // DebugWeekly(client, mongoclient, channelid);
-    // let channel = client.channels.cache.get(channelid) as Discord.TextChannel;
-    // let sampleObject = [{name: 'Testing name 1', value: 'Testing value'}, {name: 'Testing name 2', value: 'Testing value'}, {name: 'Testing name 2', value: 'Testing value'}]
-    // const sampleEmbed: Discord.MessageEmbed = new Discord.MessageEmbed()
-    // .setColor('#0072b1') // LinkedIn Blue
-    // .setTitle(`:rotating_light: :rotating_light:     **Internship/Co-Op Postings for the Week: ${moment().format("MMM Do YY")}**     :rotating_light: :rotating_light:\n\n`);
-    // sampleObject.forEach((field) => {
-    //     sampleEmbed.addField(field.name, field.value);
-    // });
-    // channel.send({embeds: [sampleEmbed]});
-    // }
+    if (msg.content === "!debug") {
+        (0, cron_1.DebugDailyEmails)(client, mongoclient);
+    }
     // if (msg.content === "!money") {
     //     WeeklyPostings(client, mongoclient);
     // }
