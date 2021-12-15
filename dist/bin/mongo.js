@@ -329,7 +329,7 @@ var WipeCollection = function (mongoclient, isInternship) { return __awaiter(voi
 }); };
 exports.WipeCollection = WipeCollection;
 var CheckUnique = function (collection, job) { return __awaiter(void 0, void 0, void 0, function () {
-    var duplicate;
+    var duplicate, duplicateTwo;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, collection.findOne({
@@ -339,7 +339,12 @@ var CheckUnique = function (collection, job) { return __awaiter(void 0, void 0, 
                 })];
             case 1:
                 duplicate = _a.sent();
-                if (duplicate) {
+                return [4 /*yield*/, collection.findOne({
+                        title: job.title,
+                    })];
+            case 2:
+                duplicateTwo = _a.sent();
+                if (duplicate || duplicateTwo) {
                     console.log("Duplicate");
                     return [2 /*return*/, false];
                 }

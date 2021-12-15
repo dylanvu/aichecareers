@@ -256,7 +256,11 @@ const CheckUnique = async (collection: any, job: Job): Promise<boolean> => {
         // company: job.company
     });
 
-    if (duplicate) {
+    let duplicateTwo = await collection.findOne({
+        title: job.title,
+    })
+
+    if (duplicate || duplicateTwo) {
         console.log("Duplicate")
         return false;
     } else {
