@@ -70,8 +70,9 @@ var DailyEmails = function (client, mongoclient) { return __awaiter(void 0, void
             }
             catch (error) {
                 console.error(error);
-                // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
-                // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
+                var debugChannel = client.channels.cache.get(process.env.DEBUG_CHANNEL_ID);
+                debugChannel.send("Error in AIChE Careers Daily!");
+                debugChannel.send(error);
             }
         }, null, true, 'America/Los_Angeles');
         console.log("Daily Email Job");

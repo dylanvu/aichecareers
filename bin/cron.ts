@@ -33,8 +33,9 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
             });
         } catch (error) {
             console.error(error);
-            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send("Error in QOTD!");
-            // client.channels.cache.get(process.env.DEBUG_CHANNEL_ID).send(error);
+            let debugChannel = client.channels.cache.get(process.env.DEBUG_CHANNEL_ID) as Discord.TextChannel
+            debugChannel.send("Error in AIChE Careers Daily!");
+            debugChannel.send(error);
         }
     }, null, true, 'America/Los_Angeles');
     console.log("Daily Email Job")
