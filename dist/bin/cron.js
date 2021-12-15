@@ -444,9 +444,10 @@ var GetJobArray = function (html) {
         var jobTitle = jobs[i].children[0];
         var companyName = companies[i].children[0];
         // jobList.push(new Job(ParseJobLink(jobs[i].attribs.href), jobTitle.data, ParseCompanyName(companyName.data))); // Create Job object with company name wihout location
-        jobList.push(new job_1.Job(jobTitle.data, ParseJobLink(jobs[i].attribs.href), companyName.data, isInternship(jobTitle.data)));
+        if (!isInvalidEntry(jobTitle.data)) {
+            jobList.push(new job_1.Job(jobTitle.data, ParseJobLink(jobs[i].attribs.href), companyName.data, isInternship(jobTitle.data)));
+        }
     }
-    // console.log(jobList)
     return jobList;
 };
 exports.GetJobArray = GetJobArray;
@@ -467,5 +468,9 @@ var isInternship = function (title) {
     // Issue: what if the title contains international, or something with intern like internal? oh well
     var lowerTitle = title.toLowerCase();
     return lowerTitle.includes("intern") || lowerTitle.includes("co-op") || lowerTitle.includes("coop") || lowerTitle.includes("student");
+};
+var isInvalidEntry = function (title) {
+    // Check to see if there are some "fake" entry level jobs
+    return title.includes("II") || title.toLowerCase().includes("senior") || title.toLowerCase().includes("experienced") || title.toLowerCase().includes("principal");
 };
 //# sourceMappingURL=cron.js.map

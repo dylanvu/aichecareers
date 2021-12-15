@@ -308,11 +308,10 @@ export const GetJobArray = (html: string): Job[] => {
         let jobTitle: any = jobs[i].children[0] as any;
         let companyName: any = companies[i].children[0] as any;
         // jobList.push(new Job(ParseJobLink(jobs[i].attribs.href), jobTitle.data, ParseCompanyName(companyName.data))); // Create Job object with company name wihout location
-        jobList.push(new Job(jobTitle.data, ParseJobLink(jobs[i].attribs.href), companyName.data, isInternship(jobTitle.data)));
+        if (!isInvalidEntry(jobTitle.data)) {
+            jobList.push(new Job(jobTitle.data, ParseJobLink(jobs[i].attribs.href), companyName.data, isInternship(jobTitle.data)));
+        }
     }
-
-    // console.log(jobList)
-    
     return jobList;
 }
 
@@ -335,4 +334,9 @@ const isInternship = (title: string): boolean => {
     // Issue: what if the title contains international, or something with intern like internal? oh well
     let lowerTitle: string = title.toLowerCase();
     return lowerTitle.includes("intern") || lowerTitle.includes("co-op") || lowerTitle.includes("coop") || lowerTitle.includes("student");
+}
+
+const isInvalidEntry = (title: string): boolean => {
+    // Check to see if there are some "fake" entry level jobs
+    return title.includes("II") || title.toLowerCase().includes("senior") || title.toLowerCase().includes("experienced") || title.toLowerCase().includes("principal")
 }
