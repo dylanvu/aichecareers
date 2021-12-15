@@ -115,13 +115,13 @@ client.on("messageCreate", function (msg) {
     // if (msg.content === "!nothing") {
     //     DebugWeekly(client, mongoclient);
     // }
-    if (msg.content === "!debug") {
-        console.log("Debug");
-        (0, cron_1.DebugDailyEmails)(client, mongoclient);
-    }
-    // if (msg.content === "!money") {
-    //     WeeklyPostings(client, mongoclient);
+    // if (msg.content === "!debug") {
+    //     console.log("Debug")
+    //     DebugDailyEmails(client, mongoclient);
     // }
+    if (msg.content === "!money") {
+        (0, cron_1.WeeklyPostings)(client, mongoclient);
+    }
     // if (msg.content === "!purge") {
     //     WipeCollection(mongoclient, true);
     //     WipeCollection(mongoclient, false);

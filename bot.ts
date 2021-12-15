@@ -82,14 +82,14 @@ client.on("messageCreate", (msg: Discord.Message) => {
     //     DebugWeekly(client, mongoclient);
     // }
 
-    if (msg.content === "!debug") {
-        console.log("Debug")
-        DebugDailyEmails(client, mongoclient);
-    }
-
-    // if (msg.content === "!money") {
-    //     WeeklyPostings(client, mongoclient);
+    // if (msg.content === "!debug") {
+    //     console.log("Debug")
+    //     DebugDailyEmails(client, mongoclient);
     // }
+
+    if (msg.content === "!money") {
+        WeeklyPostings(client, mongoclient);
+    }
 
     // if (msg.content === "!purge") {
     //     WipeCollection(mongoclient, true);
