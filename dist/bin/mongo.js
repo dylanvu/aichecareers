@@ -40,6 +40,7 @@ exports.WipeCollection = exports.EmbedGetAllJobs = exports.GetAllJobs = exports.
 var Discord = require("discord.js");
 var moment = require("moment");
 var cron_1 = require("./cron");
+var createLog_1 = require("./createLog");
 var AddChanneltoDatabase = function (mongoclient, channelid, guildid, msg, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, someCursor;
     return __generator(this, function (_a) {
@@ -148,6 +149,7 @@ var UploadJob = function (mongoclient, job) { return __awaiter(void 0, void 0, v
             case 2:
                 error_1 = _a.sent();
                 console.error(error_1);
+                (0, createLog_1.CreateErrorLog)(error_1);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

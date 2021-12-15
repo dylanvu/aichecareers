@@ -4,6 +4,7 @@ import * as mongo from 'mongodb';
 import * as dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
 import * as base64 from 'js-base64';
+import { CreateErrorLog } from './createLog';
 
 import {Job} from '../classes/job';
 import {UploadJob, GetAllJobs, WipeCollection, EmbedGetAllJobs} from './mongo';
@@ -36,6 +37,7 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
             let debugChannel = client.channels.cache.get(process.env.DEBUG_CHANNEL_ID) as Discord.TextChannel
             debugChannel.send("Error in AIChE Careers Daily!");
             debugChannel.send(error);
+            CreateErrorLog(error);
         }
     }, null, true, 'America/Los_Angeles');
     console.log("Daily Email Job")
@@ -62,6 +64,7 @@ export const DebugDailyEmails = async (client: Discord.Client, mongoclient: mong
         });
     } catch (error) {
         console.error(error);
+        CreateErrorLog(error);
     }
 }
 

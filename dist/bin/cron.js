@@ -41,6 +41,7 @@ var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
 var base64 = require("js-base64");
+var createLog_1 = require("./createLog");
 var job_1 = require("../classes/job");
 var mongo_1 = require("./mongo");
 dotenv.config();
@@ -73,6 +74,7 @@ var DailyEmails = function (client, mongoclient) { return __awaiter(void 0, void
                 var debugChannel = client.channels.cache.get(process.env.DEBUG_CHANNEL_ID);
                 debugChannel.send("Error in AIChE Careers Daily!");
                 debugChannel.send(error);
+                (0, createLog_1.CreateErrorLog)(error);
             }
         }, null, true, 'America/Los_Angeles');
         console.log("Daily Email Job");
@@ -108,6 +110,7 @@ var DebugDailyEmails = function (client, mongoclient) { return __awaiter(void 0,
         }
         catch (error) {
             console.error(error);
+            (0, createLog_1.CreateErrorLog)(error);
         }
         return [2 /*return*/];
     });
