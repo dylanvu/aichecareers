@@ -97,14 +97,23 @@ client.on("ready", function () {
     console.log("Logged in as ".concat((_a = client.user) === null || _a === void 0 ? void 0 : _a.tag, "!")); // Use ? to enable this to be undefined: https://stackoverflow.com/questions/37632760/what-is-the-question-mark-for-in-a-typescript-parameter-name
 });
 client.on("messageCreate", function (msg) {
-    // Add the bot to the database
-    if (msg.content === "!subscribe") {
+    // Add the bot to the database, internships only
+    if (msg.content === "!internships") {
         var _a = GetMessageIDs(msg), channelid = _a[0], guildid = _a[1];
-        (0, mongo_1.AddChanneltoDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannels");
+        (0, mongo_1.AddChanneltoDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannelsInternships");
     }
-    if (msg.content === "!unsubscribe") {
+    // Entry level database subscription
+    if (msg.content === "!entrylevel") {
         var _b = GetMessageIDs(msg), channelid = _b[0], guildid = _b[1];
-        (0, mongo_1.RemoveChannelFromDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannels");
+        (0, mongo_1.AddChanneltoDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannelsEntryLevel");
+    }
+    if (msg.content === "!unsubscribe_internships") {
+        var _c = GetMessageIDs(msg), channelid = _c[0], guildid = _c[1];
+        (0, mongo_1.RemoveChannelFromDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannelsInternships");
+    }
+    if (msg.content === "!unsubscribe_entrylevel") {
+        var _d = GetMessageIDs(msg), channelid = _d[0], guildid = _d[1];
+        (0, mongo_1.RemoveChannelFromDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannelsEntryLevel");
     }
     if (msg.content === "!help") {
         msg.reply("To add the Chemical Engineering Jobs bot to the channel, type in `!subscribe` \n \n To remove the bot, type in `!unsubscribe`");
@@ -120,7 +129,7 @@ client.on("messageCreate", function (msg) {
     //     DebugDailyEmails(client, mongoclient);
     // }
     if (msg.content === "!money") {
-        var _c = GetMessageIDs(msg), channelid = _c[0], guildid = _c[1];
+        var _e = GetMessageIDs(msg), channelid = _e[0], guildid = _e[1];
         (0, cron_1.DebugWeekly)(client, mongoclient, channelid);
     }
     // if (msg.content === "!purge") {

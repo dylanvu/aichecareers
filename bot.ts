@@ -59,15 +59,26 @@ client.on("ready", () => {
 });
 
 client.on("messageCreate", (msg: Discord.Message) => {
-    // Add the bot to the database
-    if (msg.content === "!subscribe") {
+    // Add the bot to the database, internships only
+    if (msg.content === "!internships") {
         let [channelid, guildid] = GetMessageIDs(msg);
-        AddChanneltoDatabase(mongoclient, channelid, guildid, msg, "ActiveChannels");
+        AddChanneltoDatabase(mongoclient, channelid, guildid, msg, "ActiveChannelsInternships");
     }
 
-    if (msg.content === "!unsubscribe") {
+    // Entry level database subscription
+    if (msg.content === "!entrylevel") {
         let [channelid, guildid] = GetMessageIDs(msg);
-        RemoveChannelFromDatabase(mongoclient, channelid, guildid, msg, "ActiveChannels");
+        AddChanneltoDatabase(mongoclient, channelid, guildid, msg, "ActiveChannelsEntryLevel");
+    }
+
+    if (msg.content === "!unsubscribe_internships") {
+        let [channelid, guildid] = GetMessageIDs(msg);
+        RemoveChannelFromDatabase(mongoclient, channelid, guildid, msg, "ActiveChannelsInternships");
+    }
+
+    if (msg.content === "!unsubscribe_entrylevel") {
+        let [channelid, guildid] = GetMessageIDs(msg);
+        RemoveChannelFromDatabase(mongoclient, channelid, guildid, msg, "ActiveChannelsEntryLevel");
     }
 
     if (msg.content === "!help") {

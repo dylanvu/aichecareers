@@ -117,36 +117,6 @@ var DebugDailyEmails = function (client, mongoclient) { return __awaiter(void 0,
 }); };
 exports.DebugDailyEmails = DebugDailyEmails;
 // Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
-// export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
-//     // Parse MongoDB collections, create the giant posting message, and send
-//     // 2000 character message limit!
-//     // Send job postings every Saturday at 10 AM PST
-//     let weeklyJob = new cron.CronJob('0 0 9 * * 6', () => {
-//         // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
-//         GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
-//             // Find all the internship jobs first
-//             for (const message of messages) {
-//                 await SendtoAll(client, mongoclient, message);
-//             }
-//             return
-//         }).then(() => {
-//             // Then find all the entry level jobs
-//             GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
-//                 for (const messageEntry of messagesEntry) {
-//                     await SendtoAll(client, mongoclient, messageEntry);
-//                 }
-//                 return
-//             }).then(() => {
-//                 // Clear database for new jobs
-//                 WipeCollection(mongoclient, true);
-//                 WipeCollection(mongoclient, false);
-//             });
-//         });
-//     }, null, true, 'America/Los_Angeles');
-//     console.log("Weekly posting started")
-//     weeklyJob.start();
-// }
-// Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
 var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, void 0, void 0, function () {
     var weeklyJob;
     return __generator(this, function (_a) {
@@ -162,7 +132,7 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
                         case 1:
                             if (!(_i < embeds_1.length)) return [3 /*break*/, 4];
                             embed = embeds_1[_i];
-                            return [4 /*yield*/, SendtoAll(client, mongoclient, embed)];
+                            return [4 /*yield*/, SendtoAll(client, mongoclient, "ActiveChannelsInternships", embed)];
                         case 2:
                             _a.sent();
                             _a.label = 3;
@@ -184,7 +154,7 @@ var WeeklyPostings = function (client, mongoclient) { return __awaiter(void 0, v
                             case 1:
                                 if (!(_i < embeds_2.length)) return [3 /*break*/, 4];
                                 embed = embeds_2[_i];
-                                return [4 /*yield*/, SendtoAll(client, mongoclient, embed)];
+                                return [4 /*yield*/, SendtoAll(client, mongoclient, "ActiveChannelsEntryLevel", embed)];
                             case 2:
                                 _a.sent();
                                 _a.label = 3;
@@ -261,7 +231,6 @@ var DebugWeekly = function (client, mongoclient, channel_id) { return __awaiter(
                 // WipeCollection(mongoclient, false);
             });
         });
-        console.log("Weekly posting started");
         return [2 /*return*/];
     });
 }); };
@@ -291,11 +260,11 @@ exports.DebugWeekly = DebugWeekly;
 //         })
 //     }
 // }
-var SendtoAll = function (client, mongoclient, embed) { return __awaiter(void 0, void 0, void 0, function () {
+var SendtoAll = function (client, mongoclient, collectionName, embed) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, allCursor, channelDeletion;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoclient.db().collection('ActiveChannels')];
+            case 0: return [4 /*yield*/, mongoclient.db().collection(collectionName)];
             case 1:
                 channelCollection = _a.sent();
                 allCursor = channelCollection.find();
@@ -304,8 +273,8 @@ var SendtoAll = function (client, mongoclient, embed) { return __awaiter(void 0,
                         // There was a bug where a channel did not exist for some reason except it was in the database, and I couldn't find it at all
                         // If DiscordJS can find the channel, send the question. Else, DiscordJS can't find a channel and delete it from the database
                         if (client.channels.cache.get(thisChannel.channel_id)) {
-                            var channel = client.channels.cache.get(thisChannel.channel_id); // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
-                            channel.send({ embeds: [embed] });
+                            var channel_1 = client.channels.cache.get(thisChannel.channel_id); // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
+                            channel_1.send({ embeds: [embed] });
                         }
                         else {
                             console.log(thisChannel.channel_id + " does not exist. Deleting from database.");

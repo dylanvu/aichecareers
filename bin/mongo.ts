@@ -17,10 +17,12 @@ export const AddChanneltoDatabase = async (mongoclient: mongo.MongoClient, chann
     )
     if (!someCursor) {
         console.log("Adding new channel with id: " + channelid);
-        if (collectionName == "ActiveChannels") {
-            msg.reply("You've subscribed to Chemical Engineering jobs! Jobs will be posted on Saturday at 9:00 AM PST!");
+        if (collectionName == "ActiveChannelsInternships") {
+            msg.reply("You've subscribed to Chemical Engineering Internships! Jobs will be posted on Saturday at 9:00 AM PST!");
+        } else if (collectionName === "ActiveChannelsEntryLevel") {
+            msg.reply("You've subscribed to Chemical Engineering Entry Level Jobs! Jobs will be posted on Saturday at 9:00 AM PST!");
         } else {
-            console.log("No collection name of <" + collectionName + "> matched but new channel added");
+            console.log("collectionName does not match anything in this code, channel was not found in the database but it got added in");
         }
 
         channelCollection.insertOne({
@@ -29,10 +31,12 @@ export const AddChanneltoDatabase = async (mongoclient: mongo.MongoClient, chann
         })
     } else {
         console.log(channelid + " already exists in database");
-        if (collectionName == "ActiveChannels") {
-            msg.reply("Chemical Engineering jobs has already been added. Please wait until Friday at 8:00 PM PST.");
+        if (collectionName == "ActiveChannelsInternships") {
+            msg.reply("Chemical Engineering Internships has already been added. Please wait until Saturday at 9:00 AM PST!");
+        } else if (collectionName === "ActiveChannelsEntryLevel") {
+            msg.reply("Chemical Engineering Entry Level jobs has already been added. Please wait until Saturday at 9:00 AM PST!");
         } else {
-            console.log("No collection name of <" + collectionName + "> matches and current channel is already added");
+            console.log("collectionName does not match anything in this code, but was found in the database");
         }
     }
 }
@@ -49,11 +53,7 @@ export const RemoveChannelFromDatabase = async (mongoclient: mongo.MongoClient, 
     )
     if (someCursor) {
         console.log("Deleting channel " + channelid);
-        if (collectionName == "ActiveChannels") {
-            msg.reply("Chemical Engineering jobs has been removed. Good luck in your job searches!");
-        } else {
-            console.log("Attempting to delete channel from <" + collectionName + "> but cannot find match to collection")
-        }
+        msg.reply("Chemical Engineering jobs has been removed. Good luck in your job searches!");
         
         channelCollection.deleteOne({
             channel_id : channelid,
@@ -61,12 +61,7 @@ export const RemoveChannelFromDatabase = async (mongoclient: mongo.MongoClient, 
         })
     } else {
         console.log("Cannot delete channel that doesn't exist");
-        if (collectionName == "ActiveChannels") {
             msg.reply("It appears you haven't added Chemical Engineering jobs to this channel yet. Give your career a shot before you remove me!");
-        } else {
-            console.log("Attempting to delete channel from <" + collectionName + "> when it doesn't exist in database, but cannot find match to collection")
-        }
-        
     }
 }
 

@@ -8,6 +8,7 @@ import { CreateErrorLog } from './createLog';
 
 import {Job} from '../classes/job';
 import {UploadJob, GetAllJobs, WipeCollection, EmbedGetAllJobs} from './mongo';
+import { channel } from 'diagnostics_channel';
 
 dotenv.config();
 
@@ -69,37 +70,6 @@ export const DebugDailyEmails = async (client: Discord.Client, mongoclient: mong
 }
 
 // Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
-// export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
-//     // Parse MongoDB collections, create the giant posting message, and send
-//     // 2000 character message limit!
-//     // Send job postings every Saturday at 10 AM PST
-//     let weeklyJob = new cron.CronJob('0 0 9 * * 6', () => {
-//         // Literally the most horrific promise code I've written, since I can't put awaits when it's not top level in typescript which sucks
-//         GetAllJobs(mongoclient, true).then(async (messages: string[]) => {
-//             // Find all the internship jobs first
-//             for (const message of messages) {
-//                 await SendtoAll(client, mongoclient, message);
-//             }
-//             return
-//         }).then(() => {
-//             // Then find all the entry level jobs
-//             GetAllJobs(mongoclient, false).then(async (messagesEntry: string[]) => {
-//                 for (const messageEntry of messagesEntry) {
-//                     await SendtoAll(client, mongoclient, messageEntry);
-//                 }
-//                 return
-//             }).then(() => {
-//                 // Clear database for new jobs
-//                 WipeCollection(mongoclient, true);
-//                 WipeCollection(mongoclient, false);
-//             });
-//         });
-//     }, null, true, 'America/Los_Angeles');
-//     console.log("Weekly posting started")
-//     weeklyJob.start();
-// }
-
-// Possible TODO: repeat on Wednesday and Saturdays? https://stackoverflow.com/questions/31260837/how-to-run-a-cron-job-on-every-monday-wednesday-and-friday
 export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.MongoClient) => {
     // Parse MongoDB collections, create the giant posting message, and send
     // 2000 character message limit!
@@ -109,14 +79,14 @@ export const WeeklyPostings = async (client: Discord.Client, mongoclient: mongo.
         EmbedGetAllJobs(mongoclient, true).then(async (embeds: Discord.MessageEmbed[]) => {
             // Find all the internship jobs first
             for (const embed of embeds) {
-                await SendtoAll(client, mongoclient, embed);
+                await SendtoAll(client, mongoclient, "ActiveChannelsInternships", embed);
             }
             return
         }).then(() => {
             // Then find all the entry level jobs
             EmbedGetAllJobs(mongoclient, false).then(async (embeds: Discord.MessageEmbed[]) => {
                 for (const embed of embeds) {
-                    await SendtoAll(client, mongoclient, embed);
+                    await SendtoAll(client, mongoclient, "ActiveChannelsEntryLevel", embed);
                 }
                 return
             }).then(() => {
@@ -157,7 +127,6 @@ export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.Mon
             // WipeCollection(mongoclient, false);
         });
     });
-    console.log("Weekly posting started")
 }
 
 
@@ -192,9 +161,9 @@ export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.Mon
 //     }
 // }
 
-const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, embed: Discord.MessageEmbed) => {
+const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, collectionName: string, embed: Discord.MessageEmbed) => {
 
-    let channelCollection = await mongoclient.db().collection('ActiveChannels')
+    let channelCollection = await mongoclient.db().collection(collectionName);
     let allCursor = channelCollection.find();
 
     let channelDeletion: string[] = []
