@@ -129,37 +129,18 @@ export const DebugWeekly = async (client: Discord.Client, mongoclient: mongo.Mon
     });
 }
 
+export const SendAllJobsToOne = async (client: Discord.Client, mongoclient: mongo.MongoClient, channel_id: string, internships: boolean) => {
+    // Parse MongoDB collections, create the giant posting message, and send
+    // 2000 character message limit!
+    // Send job postings every Saturday at 10 AM PST
 
-// <------------------------- DiscordJS support function or something ------------------>
-
-// const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, message: string) => {
-
-//     let channelCollection = await mongoclient.db().collection('ActiveChannels')
-//     let allCursor = channelCollection.find();
-
-//     let channelDeletion: string[] = []
-
-//     await allCursor.forEach((thisChannel: any) => {
-//         // There was a bug where a channel did not exist for some reason except it was in the database, and I couldn't find it at all
-//         // If DiscordJS can find the channel, send the question. Else, DiscordJS can't find a channel and delete it from the database
-//         if (client.channels.cache.get(thisChannel.channel_id)) {
-//             let channel = client.channels.cache.get(thisChannel.channel_id) as Discord.TextChannel; // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
-//             channel.send(message);
-//         } else {
-//             console.log(thisChannel.channel_id + " does not exist. Deleting from database.")
-//             channelDeletion.push(thisChannel.channel_id);
-//         }
-//     })
-
-//     // Delete all undefined channels
-//     if (channelDeletion.length != 0) {
-//         channelDeletion.forEach((channelid) => {
-//             channelCollection.deleteOne({
-//                 channel_id : channelid
-//             })
-//         })
-//     }
-// }
+    EmbedGetAllJobs(mongoclient, internships).then(async (embeds: Discord.MessageEmbed[]) => {
+        for (const embed of embeds) {
+            await SendToOne(client, channel_id, embed);
+        }
+        return
+    });
+}
 
 const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, collectionName: string, embed: Discord.MessageEmbed) => {
 

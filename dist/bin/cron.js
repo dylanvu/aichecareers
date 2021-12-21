@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParseCompanyName = exports.GetJobArray = exports.GetAccessToken = exports.DebugWeekly = exports.WeeklyPostings = exports.DebugDailyEmails = exports.DailyEmails = void 0;
+exports.ParseCompanyName = exports.GetJobArray = exports.GetAccessToken = exports.SendAllJobsToOne = exports.DebugWeekly = exports.WeeklyPostings = exports.DebugDailyEmails = exports.DailyEmails = void 0;
 var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
@@ -235,31 +235,36 @@ var DebugWeekly = function (client, mongoclient, channel_id) { return __awaiter(
     });
 }); };
 exports.DebugWeekly = DebugWeekly;
-// <------------------------- DiscordJS support function or something ------------------>
-// const SendtoAll = async (client: Discord.Client, mongoclient: mongo.MongoClient, message: string) => {
-//     let channelCollection = await mongoclient.db().collection('ActiveChannels')
-//     let allCursor = channelCollection.find();
-//     let channelDeletion: string[] = []
-//     await allCursor.forEach((thisChannel: any) => {
-//         // There was a bug where a channel did not exist for some reason except it was in the database, and I couldn't find it at all
-//         // If DiscordJS can find the channel, send the question. Else, DiscordJS can't find a channel and delete it from the database
-//         if (client.channels.cache.get(thisChannel.channel_id)) {
-//             let channel = client.channels.cache.get(thisChannel.channel_id) as Discord.TextChannel; // Cast to text channel: https://github.com/discordjs/discord.js/issues/3622
-//             channel.send(message);
-//         } else {
-//             console.log(thisChannel.channel_id + " does not exist. Deleting from database.")
-//             channelDeletion.push(thisChannel.channel_id);
-//         }
-//     })
-//     // Delete all undefined channels
-//     if (channelDeletion.length != 0) {
-//         channelDeletion.forEach((channelid) => {
-//             channelCollection.deleteOne({
-//                 channel_id : channelid
-//             })
-//         })
-//     }
-// }
+var SendAllJobsToOne = function (client, mongoclient, channel_id, internships) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        // Parse MongoDB collections, create the giant posting message, and send
+        // 2000 character message limit!
+        // Send job postings every Saturday at 10 AM PST
+        (0, mongo_1.EmbedGetAllJobs)(mongoclient, internships).then(function (embeds) { return __awaiter(void 0, void 0, void 0, function () {
+            var _i, embeds_5, embed;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _i = 0, embeds_5 = embeds;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < embeds_5.length)) return [3 /*break*/, 4];
+                        embed = embeds_5[_i];
+                        return [4 /*yield*/, SendToOne(client, channel_id, embed)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); });
+        return [2 /*return*/];
+    });
+}); };
+exports.SendAllJobsToOne = SendAllJobsToOne;
 var SendtoAll = function (client, mongoclient, collectionName, embed) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, allCursor, channelDeletion;
     return __generator(this, function (_a) {

@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-import { DailyEmails, DebugWeekly, WeeklyPostings, DebugDailyEmails } from './bin/cron';
+import { DailyEmails, DebugWeekly, WeeklyPostings, SendAllJobsToOne } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
 import * as moment from 'moment'
 
@@ -82,7 +82,7 @@ client.on("messageCreate", (msg: Discord.Message) => {
     }
 
     if (msg.content === "!help") {
-        msg.reply("To add the Chemical Engineering Jobs bot to the channel, type in `!subscribe` \n \n To remove the bot, type in `!unsubscribe`");
+        msg.reply("To subscribe the Chemical Engineering Jobs bot to this channel, type in `!subscribe` \n \n To unsubscribe the bot, type in `!unsubscribe` \n \n To get all current job listings, type in `!money`, `!money_internships`, or `!money_entry` for all postings, internships only, or entry level only");
     }
 
     if (msg.content === "!github") {
@@ -99,8 +99,19 @@ client.on("messageCreate", (msg: Discord.Message) => {
     // }
 
     if (msg.content === "!money") {
-        let [channelid, guildid] = GetMessageIDs(msg);
+        // Send both jobs and internships
+        let [channelid, _] = GetMessageIDs(msg);
         DebugWeekly(client, mongoclient, channelid);
+    }
+
+    if (msg.content === "!money_internships") {
+        let [channelid, _] = GetMessageIDs(msg);
+        SendAllJobsToOne(client, mongoclient, channelid, true);
+    }
+
+    if (msg.content === "!money_entry") {
+        let [channelid, _] = GetMessageIDs(msg);
+        SendAllJobsToOne(client, mongoclient, channelid, false);
     }
 
     // if (msg.content === "!purge") {

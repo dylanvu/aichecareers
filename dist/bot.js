@@ -116,7 +116,7 @@ client.on("messageCreate", function (msg) {
         (0, mongo_1.RemoveChannelFromDatabase)(mongoclient, channelid, guildid, msg, "ActiveChannelsEntryLevel");
     }
     if (msg.content === "!help") {
-        msg.reply("To add the Chemical Engineering Jobs bot to the channel, type in `!subscribe` \n \n To remove the bot, type in `!unsubscribe`");
+        msg.reply("To subscribe the Chemical Engineering Jobs bot to this channel, type in `!subscribe` \n \n To unsubscribe the bot, type in `!unsubscribe` \n \n To get all current job listings, type in `!money`, `!money_internships`, or `!money_entry` for all postings, internships only, or entry level only");
     }
     if (msg.content === "!github") {
         msg.reply("<https://github.com/vu-dylan/aichecareers>");
@@ -129,8 +129,17 @@ client.on("messageCreate", function (msg) {
     //     DebugDailyEmails(client, mongoclient);
     // }
     if (msg.content === "!money") {
-        var _e = GetMessageIDs(msg), channelid = _e[0], guildid = _e[1];
+        // Send both jobs and internships
+        var _e = GetMessageIDs(msg), channelid = _e[0], _ = _e[1];
         (0, cron_1.DebugWeekly)(client, mongoclient, channelid);
+    }
+    if (msg.content === "!money_internships") {
+        var _f = GetMessageIDs(msg), channelid = _f[0], _ = _f[1];
+        (0, cron_1.SendAllJobsToOne)(client, mongoclient, channelid, true);
+    }
+    if (msg.content === "!money_entry") {
+        var _g = GetMessageIDs(msg), channelid = _g[0], _ = _g[1];
+        (0, cron_1.SendAllJobsToOne)(client, mongoclient, channelid, false);
     }
     // if (msg.content === "!purge") {
     //     WipeCollection(mongoclient, true);

@@ -21,6 +21,8 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * `!entrylevel` - Subscribe the channel to entry level job alerts
 * `!unsubscribe` - Unsubscribe from the job alerts
 * `!money` - Get all the current listings from the start of the week
+* `!money_internships` - Get all the current internship listings from the start of the week
+* `!money_entry` - Get all the current entry level job listings from the start of the week
 * `!help` - List of commands
 * `!github` - Link this repository
 
