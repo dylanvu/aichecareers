@@ -6,7 +6,6 @@ import * as mongo from 'mongodb';
 import * as express from 'express';
 import { DailyEmails, DebugWeekly, WeeklyPostings, SendAllJobsToOne } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
-import * as moment from 'moment'
 
 dotenv.config();
 
@@ -29,6 +28,9 @@ const client = new Discord.Client({intents: [
 // See: https://github.com/oceanroleplay/discord.ts-example/blob/main/src/client.ts
 // https://discord.js.org/#/docs/main/stable/class/Intents?scrollTo=s-FLAGS
 // https://discord.com/developers/docs/topics/gateway#list-of-intents
+
+
+client.options.http.api = "https://discord.com/api"; // Avoid 429 Status: https://support.glitch.com/t/discord-bot-not-connecting-or-429-status-code/28349
 
 // MongoDB client
 const mongoclient = new mongo.MongoClient(process.env.MONGO_DB_CONNECTION!); // Use the ! for non null assertion operator: https://stackoverflow.com/questions/54496398/typescript-type-string-undefined-is-not-assignable-to-type-string
@@ -119,5 +121,9 @@ client.on("messageCreate", (msg: Discord.Message) => {
     //     WipeCollection(mongoclient, false);
     // }
 })
+
+
+// 429 is a rate limit
+client.on('debug', console.log);
 
 client.login(process.env.DISCORD_BOT_TOKEN);

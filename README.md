@@ -55,6 +55,7 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * https://discord.com/developers/docs/topics/gateway#list-of-intents
 * https://discord.com/developers/docs/resources/channel#embed-limits
 * https://discordjs.guide/popular-topics/embeds.html#embed-preview
+* https://support.glitch.com/t/discord-bot-not-connecting-or-429-status-code/28349 429 code
 
 ### GMail API and Related to OAuth/Access
 * https://ibm.com/docs/en/app-connect/cloud?topic=gmail-connecting-google-application-by-providing-credentials-app-connect-use-basic-oauth
@@ -66,3 +67,7 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 ### Cheerio
 * https://www.freecodecamp.org/news/the-ultimate-guide-to-web-scraping-with-node-js-daa2027dcd3/
 * https://stackoverflow.com/questions/54463522/is-there-a-cheerio-selector-for-style
+
+### Replit Stuff
+* https://replit.com/talk/ask/Discordjs-bot-will-not-login-to-client-user-why/112374
+* https://dev.to/arnavkr/updating-node-js-to-16-in-replit-1ep0 Update Replit NodeJS version
