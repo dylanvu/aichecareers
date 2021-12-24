@@ -41,7 +41,7 @@ var cron = require("cron");
 var dotenv = require("dotenv");
 var cheerio = require("cheerio");
 var base64 = require("js-base64");
-var createLog_1 = require("./createLog");
+var createLog_1 = require("../error-logs/createLog");
 var job_1 = require("../classes/job");
 var mongo_1 = require("./mongo");
 dotenv.config();
@@ -106,10 +106,12 @@ var DebugDailyEmails = function (client, mongoclient) { return __awaiter(void 0,
                         }
                     });
                 }); });
+            }).catch(function (error) {
+                (0, createLog_1.CreateErrorLog)(error);
             });
         }
         catch (error) {
-            console.error(error);
+            // console.error(error);
             (0, createLog_1.CreateErrorLog)(error);
         }
         return [2 /*return*/];

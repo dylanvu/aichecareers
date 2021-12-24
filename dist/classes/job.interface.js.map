@@ -1,1 +1,0 @@
-{"version":3,"file":"job.interface.js","sourceRoot":"","sources":["../../classes/job.interface.ts"],"names":[],"mappings":";;;AAAA;IAOI,aAAY,QAAgB,EAAE,OAAe,EAAE,UAAkB,EAAE,YAAqB;QACpF,IAAI,CAAC,KAAK,GAAG,QAAQ,CAAC;QACtB,IAAI,CAAC,IAAI,GAAG,OAAO,CAAC;QACpB,IAAI,CAAC,OAAO,GAAG,UAAU,CAAC;QAC1B,IAAI,CAAC,UAAU,GAAG,YAAY,CAAC;IACnC,CAAC;IACL,UAAC;AAAD,CAAC,AAbD,IAaC;AAbY,kBAAG"}

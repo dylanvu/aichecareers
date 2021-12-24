@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as Discord from 'discord.js';
 import * as mongo from 'mongodb';
 import * as express from 'express';
-import { DailyEmails, DebugWeekly, WeeklyPostings, SendAllJobsToOne } from './bin/cron';
+import { DailyEmails, DebugWeekly, WeeklyPostings, SendAllJobsToOne, DebugDailyEmails } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
 const { exec } = require("child_process");
 
@@ -96,10 +96,10 @@ client.on("messageCreate", (msg: Discord.Message) => {
     //     DebugWeekly(client, mongoclient);
     // }
 
-    // if (msg.content === "!debug") {
-    //     console.log("Debug")
-    //     DebugDailyEmails(client, mongoclient);
-    // }
+    if (msg.content === "!debug") {
+        console.log("Debug")
+        DebugDailyEmails(client, mongoclient);
+    }
 
     if (msg.content === "!money") {
         // Send both jobs and internships

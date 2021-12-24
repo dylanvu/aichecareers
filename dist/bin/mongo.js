@@ -40,7 +40,7 @@ exports.WipeCollection = exports.EmbedGetAllJobs = exports.GetAllJobs = exports.
 var Discord = require("discord.js");
 var moment = require("moment");
 var cron_1 = require("./cron");
-var createLog_1 = require("./createLog");
+var createLog_1 = require("../error-logs/createLog");
 var AddChanneltoDatabase = function (mongoclient, channelid, guildid, msg, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
     var channelCollection, someCursor;
     return __generator(this, function (_a) {

@@ -4,7 +4,7 @@ import * as mongo from 'mongodb';
 import * as dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
 import * as base64 from 'js-base64';
-import { CreateErrorLog } from './createLog';
+import { CreateErrorLog } from '../error-logs/createLog';
 
 import {Job} from '../classes/job';
 import {UploadJob, GetAllJobs, WipeCollection, EmbedGetAllJobs} from './mongo';
@@ -62,9 +62,11 @@ export const DebugDailyEmails = async (client: Discord.Client, mongoclient: mong
                     UploadEmail(accessToken, emailId, mongoclient);
                 })
             });
+        }).catch((error) => {
+            CreateErrorLog(error);
         });
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         CreateErrorLog(error);
     }
 }

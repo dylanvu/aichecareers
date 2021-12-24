@@ -126,10 +126,10 @@ client.on("messageCreate", function (msg) {
     // if (msg.content === "!nothing") {
     //     DebugWeekly(client, mongoclient);
     // }
-    // if (msg.content === "!debug") {
-    //     console.log("Debug")
-    //     DebugDailyEmails(client, mongoclient);
-    // }
+    if (msg.content === "!debug") {
+        console.log("Debug");
+        (0, cron_1.DebugDailyEmails)(client, mongoclient);
+    }
     if (msg.content === "!money") {
         // Send both jobs and internships
         var _e = GetMessageIDs(msg), channelid = _e[0], _ = _e[1];

@@ -3,7 +3,7 @@ import * as Discord from 'discord.js'
 import * as moment from 'moment';
 import { Job } from '../classes/job';
 import { ParseCompanyName } from './cron';
-import { CreateErrorLog } from './createLog';
+import { CreateErrorLog } from '../error-logs/createLog';
 
 export const AddChanneltoDatabase = async (mongoclient: mongo.MongoClient, channelid: string, guildid: string, msg: Discord.Message, collectionName: string) => {
     let channelCollection = await mongoclient.db().collection(collectionName);
