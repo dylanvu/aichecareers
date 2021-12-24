@@ -6,6 +6,7 @@ import * as mongo from 'mongodb';
 import * as express from 'express';
 import { DailyEmails, DebugWeekly, WeeklyPostings, SendAllJobsToOne } from './bin/cron';
 import { AddChanneltoDatabase, RemoveChannelFromDatabase, WipeCollection } from './bin/mongo';
+const { exec } = require("child_process");
 
 dotenv.config();
 
@@ -124,6 +125,11 @@ client.on("messageCreate", (msg: Discord.Message) => {
 
 
 // 429 is a rate limit
-client.on('debug', console.log);
+client.on('debug', debug => {
+    console.log(debug)
+    if (debug.includes("429")) { // 429 is a rate limit, kill replit if it is rate limited
+        exec("kill 1");
+    }
+});
 
 client.login(process.env.DISCORD_BOT_TOKEN);

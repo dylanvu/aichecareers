@@ -70,4 +70,5 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 
 ### Replit Stuff
 * https://replit.com/talk/ask/Discordjs-bot-will-not-login-to-client-user-why/112374
+* https://replit.com/talk/ask/Discord-Bot-How-to-fix-429-rate-limit-error/121289 429 rate limit
 * https://dev.to/arnavkr/updating-node-js-to-16-in-replit-1ep0 Update Replit NodeJS version

@@ -43,6 +43,7 @@ var mongo = require("mongodb");
 var express = require("express");
 var cron_1 = require("./bin/cron");
 var mongo_1 = require("./bin/mongo");
+var exec = require("child_process").exec;
 dotenv.config();
 var APP = express();
 var PORT = 3000;
@@ -148,6 +149,11 @@ client.on("messageCreate", function (msg) {
     // }
 });
 // 429 is a rate limit
-client.on('debug', console.log);
+client.on('debug', function (debug) {
+    console.log(debug);
+    if (debug.includes("429")) { // 429 is a rate limit, kill replit if it is rate limited
+        exec("kill 1");
+    }
+});
 client.login(process.env.DISCORD_BOT_TOKEN);
 //# sourceMappingURL=bot.js.map
