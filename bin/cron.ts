@@ -32,6 +32,8 @@ export const DailyEmails = async (client: Discord.Client, mongoclient: mongo.Mon
                         UploadEmail(accessToken, emailId, mongoclient);
                     })
                 });
+            }).catch((error) => {
+                CreateErrorLog(error);
             });
         } catch (error) {
             console.error(error);

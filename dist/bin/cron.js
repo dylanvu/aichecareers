@@ -67,6 +67,8 @@ var DailyEmails = function (client, mongoclient) { return __awaiter(void 0, void
                             }
                         });
                     }); });
+                }).catch(function (error) {
+                    (0, createLog_1.CreateErrorLog)(error);
                 });
             }
             catch (error) {
