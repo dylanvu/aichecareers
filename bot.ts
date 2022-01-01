@@ -96,10 +96,10 @@ client.on("messageCreate", (msg: Discord.Message) => {
     //     DebugWeekly(client, mongoclient);
     // }
 
-    // if (msg.content === "!debug") {
-    //     console.log("Debug")
-    //     DebugDailyEmails(client, mongoclient);
-    // }
+    if (msg.content === "!debug") {
+        console.log("Debug")
+        DebugDailyEmails(client, mongoclient);
+    }
 
     if (msg.content === "!money") {
         // Send both jobs and internships
