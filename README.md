@@ -1,6 +1,8 @@
 # UCSB AIChE Careers Bot
 ## About
-This is a Discord bot to send chemical engineering internship and full-time job postings to the UCSB AIChE Discord Channel to help students find professional opportunities.
+This is a Discord bot to send chemical engineering internship and full-time job postings to the UCSB AIChE Discord Channel to help students find professional opportunities. 
+
+Disclaimer: Job availability and uniqueness not guaranteed. 
 
 ## How It Works
 * I made a fake GMail and LinkedIn account and signed up for job postings which get sent to my email and put into a gmail filter
@@ -10,7 +12,7 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 ## Adding the Bot
 * Make sure you're an admin
 * Use this link: https://discord.com/api/oauth2/authorize?client_id=917917515542310942&permissions=3072&scope=bot
-* In the channel(s) that you want the bot to post the job listings, type in `!subscribe`
+* In the channel(s) that you want the bot to post the job listings, type in `!internships` and/or `!entrylevel` to subscribe to the associated jobs
 
 ## Removing the Bot
 * Type in `!unsubscribe_entrylevel` and/or `!unsubscribe_internships` in all subscribed channels
