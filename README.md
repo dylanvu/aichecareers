@@ -8,6 +8,7 @@ Disclaimer: Job availability and uniqueness not guaranteed.
 * I made a fake GMail and LinkedIn account and signed up for job postings which get sent to my email and put into a gmail filter
 * Every day, I search in my filter to get new job opportunities and put it into my MongoDB database
 * Once a week, I look through MongoDB, format the listings, and send a message of the week's job opportunities to subscribed channels
+* It's incredibly easy to scale up. When you run out of the 20 job alert, create more fake LinkedIn accounts and automatically forward the job postings to the main GMail account. The Google Mail API also gets you like 33,000 operations daily.
 
 ## Adding the Bot
 * Make sure you're an admin
