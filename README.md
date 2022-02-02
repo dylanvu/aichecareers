@@ -13,18 +13,23 @@ This is a Discord bot to send chemical engineering internship and full-time job 
 * In the channel(s) that you want the bot to post the job listings, type in `!subscribe`
 
 ## Removing the Bot
-* Type in `!unsubscribe` in all subscribed channels
+* Type in `!unsubscribe_entrylevel` and/or `!unsubscribe_internships` in all subscribed channels
 * Kick the bot out of the server
 
 ## All Commands
 * `!internships` - Subscribe the channel to internship job alerts
 * `!entrylevel` - Subscribe the channel to entry level job alerts
-* `!unsubscribe` - Unsubscribe from the job alerts
+* `!unsubscribe_internships` - Unsubscribe from the internship job alerts
+* `!unsubscribe_entrylevel` - Unsubscribe from the entry level job alerts
 * `!money` - Get all the current listings from the start of the week
 * `!money_internships` - Get all the current internship listings from the start of the week
 * `!money_entry` - Get all the current entry level job listings from the start of the week
 * `!help` - List of commands
 * `!github` - Link this repository
+
+## Future TODO:
+* Smarter Duplicate filtering - If the posting is from the same company with the same title and location, overwrite it with the newest one.
+   * This will help cycle out any of the old expired postings
 
 ## Technologies Used
 * [Typescript](https://www.typescriptlang.org/) - I wanted to learn some basic Typescript
